@@ -32,7 +32,7 @@ docker build -t plip-bohrium-app:1.0 .
 # 用 bohr CLI 在玻尔上登记镜像（把 <project_id> 换成你的项目 ID）
 bohr image build --mode local \
   --dockerfile ./Dockerfile --context . \
-  --name plip-bohrium-app:1.0 \
+  --name zhuyan/plip-bohrium-app:1.0 \
   --project-id <project_id> -o json
 # 上一条命令会返回 pushCommand，在同一个 Docker 环境里原样执行它，
 # 不要自己拼 registry 地址。成功后核对返回的 imageUrl、digest、status=1。
