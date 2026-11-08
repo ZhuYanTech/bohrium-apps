@@ -1,0 +1,3 @@
+# 玻尔离线任务 Launching SDK（与 PLIP / Boltz-2 相同版本）
+dp-launching-app==0.1.0a1
+bohrium-open-sdk==1.0.5
