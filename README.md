@@ -17,7 +17,7 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
 | --- | --- | --- |
 | **PLIP 蛋白-配体相互作用分析** | 上传蛋白-配体复合物 PDB（或填 PDB ID），输出相互作用清单（CSV）+ 中文报告。CPU 即可，单结构通常 5 分钟内完成。 | [`apps/plip/`](apps/plip/) |
 
-已实测：1VSN 共 13 个相互作用（氢键 7、疏水 4、卤键 2）；3MXF 的目标配体 JQ1 为 14 个（含 ASN140 经典氢键）。
+1VSN：13 个相互作用（氢键 7、疏水 4、卤键 2）；3MXF 的目标配体 JQ1：14 个（含 ASN140 经典氢键）。
 详见 [`apps/plip/VERIFICATION.md`](apps/plip/VERIFICATION.md)。
 
 ## 如何加一个新应用
@@ -28,9 +28,9 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
    - `Dockerfile`：任务镜像（版本钉死）
    - `bohrium/bohrium-publish.md`：发布清单 + `bohr` 命令
    - `bohrium/app.json`：App 元数据（中英描述、输入/输出 schema）
-   - `examples/`：至少一个真实跑通的例子 + 验证脚本
+   - `examples/`：至少一个跑通的例子 + 验证脚本
 3. 别在应用之间共用会变的代码；共用的说明只写在仓库根 README 这里。
-4. 新应用先在本地实测通过（真实输出，不是编造的数字），再推镜像、上架。
+4. 新应用先在本地验证通过，再推镜像、上架。
 
 ## 目录结构
 
@@ -38,12 +38,12 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
 .
 ├── README.md          本文件
 ├── apps/
-│   └── plip/          第一个应用：PLIP 蛋白-配体相互作用分析
+│   └── plip/          PLIP 蛋白-配体相互作用分析
 │       ├── README.md
 │       ├── Dockerfile
 │       ├── run_plip.py
 │       ├── app_streamlit.py
-│       ├── examples/      本地验证脚本 + 1VSN / 3MXF 真实输出
+│       ├── examples/      验证脚本 + 1VSN / 3MXF 运行结果
 │       └── bohrium/       发布清单 + App 元数据
 └── (未来：apps/<下一个应用>/)
 ```
@@ -83,9 +83,9 @@ Verified: 1VSN gives 13 interactions (7 H-bonds, 4 hydrophobic, 2 halogen); for 
    - `Dockerfile` — the job image, with pinned versions
    - `bohrium/bohrium-publish.md` — publish checklist + `bohr` commands
    - `bohrium/app.json` — App metadata (zh/en description, input/output schema)
-   - `examples/` — at least one real, verified example + a test script
+   - `examples/` — at least one working example + a test script
 3. Don't share mutable code between apps; shared guidance lives only in this root README.
-4. Verify a new app locally with real output (never invented numbers) before pushing an image and publishing.
+4. Verify a new app locally before pushing an image and publishing.
 
 ## License
 
