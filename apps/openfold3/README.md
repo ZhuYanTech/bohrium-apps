@@ -42,7 +42,7 @@ python3 run_openfold3.py --protein-sequence-file examples/ubiquitin-1ubq/sequenc
 ## 镜像
 
 ```bash
-docker build -t zhuyan/openfold3-bohrium-app:1.0 .
+docker build -t zhuyan-xlab/openfold3:1.0 .
 ```
 
 Dockerfile 不含 COPY，可直接粘贴到玻尔镜像中心构建：

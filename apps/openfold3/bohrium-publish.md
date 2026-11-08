@@ -6,7 +6,7 @@ App ID `openfold3`，类型：标准离线任务（Standard Offline Task）。
 ## 1. 建镜像（镜像中心）
 
 打开镜像中心 https://www.bohrium.com/developer/image-hub，
-新建镜像，名称 `zhuyan/openfold3-bohrium-app`，标签 `1.0`，
+新建镜像，名称 `zhuyan-xlab/openfold3`，标签 `1.0`，
 把 `bohrium/Dockerfile.imagehub` 的全文粘贴进 Dockerfile 输入框，
 提交构建。构建耗时较长（约 2.29 GB 检查点 + PyTorch + OpenFold3），
 构建日志里确认：检查点文件存在、OpenFold3 与 torch 版本正确、
@@ -15,7 +15,7 @@ App ID `openfold3`，类型：标准离线任务（Standard Offline Task）。
 镜像中心的构建无需本地 Docker；本地验证可用：
 
 ```bash
-docker build -t zhuyan/openfold3-bohrium-app:1.0 .
+docker build -t zhuyan-xlab/openfold3:1.0 .
 ```
 
 ## 2. 测运行（玻尔节点，GPU）
@@ -33,7 +33,7 @@ docker build -t zhuyan/openfold3-bohrium-app:1.0 .
 - App 名称：`OpenFold3 结构预测`
 - 类型：标准离线任务
 - 中英文描述：见 `app.json` 的 `description_zh` / `description_en`
-- 新建版本：镜像选上一步建好的 `zhuyan/openfold3-bohrium-app:1.0`，
+- 新建版本：镜像选上一步建好的 `zhuyan-xlab/openfold3:1.0`，
   EntryPoint 填 `/app/launching.py`，机型选 GPU（24 GB 显存起步，32 GB 推荐）
 
 ## 发布后检查
