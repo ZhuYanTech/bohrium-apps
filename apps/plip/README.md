@@ -111,6 +111,7 @@ App 元数据见 [`bohrium/app.json`](bohrium/app.json)。玻尔注册镜像名�
 ```
 .
 ├── README.md                  本文件
+├── USER_GUIDE.md              使用指南（与开发者中心 User Guide 栏内容一致）
 ├── Dockerfile                 任务镜像（python:3.12-slim + plip==3.0.1）
 ├── requirements-plip.txt      PLIP 运行时依赖（已钉版本）
 ├── requirements.txt           Streamlit 演示界面依赖
