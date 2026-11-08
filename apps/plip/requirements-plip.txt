@@ -1,0 +1,5 @@
+# PLIP 运行时依赖（Dockerfile 用；与 2026-11-07 本地实测版本一致）
+plip==3.0.1
+openbabel==3.2.1
+numpy==2.5.4
+lxml==6.1.3

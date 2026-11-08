@@ -1,0 +1,48 @@
+# PLIP 玻尔 App — 自包含 Dockerfile（草稿，未验证）
+# 用途：玻尔网页“基于 Dockerfile 创建镜像”只接受粘贴的 Dockerfile 文本，
+# 没有构建上下文，所以原 Dockerfile 里的 COPY requirements-plip.txt /
+# COPY run_plip.py 在这儿没法用。本文件改成在构建时从 GitHub 拉取这两个文件。
+# 来源：https://github.com/ZhuYanTech/bohrium-apps （apps/plip/）
+# 注意：
+# - 构建时需要能访问 raw.githubusercontent.com；若玻尔构建环境拉不到，
+#   改走“在 Docker 机器上建镜像再推”那条路。
+# - pip 用清华源（玻尔文档建议），apt 用阿里源。
+# - 玻尔要求镜像装 SSH 相关组件（openssh-server / supervisor / net-tools），
+#   否则管理节点可能用不了；任务提交本身不受影响。
+# - 本文件是草稿：本机无 Docker，未做 docker build 验证；不要直接替换
+#   apps/plip/Dockerfile，直到在玻尔上构建成功一次。
+FROM python:3.12-slim
+
+LABEL org.opencontainers.image.title="PLIP 蛋白-配体相互作用分析（玻尔 App）"
+LABEL org.opencontainers.image.description="PLIP 3.0.1, GPLv2. Upload PDB / PDB ID, output interaction table + Chinese report."
+LABEL org.opencontainers.image.source="https://github.com/pharmai/plip"
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+# 系统依赖 + SSH 组件（玻尔要求）+ curl（拉取仓库文件用）
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        libgomp1 \
+        openssh-server \
+        supervisor \
+        net-tools \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 从 GitHub 拉取仓库文件（代替 COPY；构建上下文里没有这些文件）
+RUN curl -fsSL -o requirements-plip.txt \
+        https://raw.githubusercontent.com/ZhuYanTech/bohrium-apps/main/apps/plip/requirements-plip.txt \
+    && curl -fsSL -o run_plip.py \
+        https://raw.githubusercontent.com/ZhuYanTech/bohrium-apps/main/apps/plip/run_plip.py
+
+# 钉死版本：与 2026-11-07 本地实测一致（plip 3.0.1 / openbabel 3.2.1 / numpy 2.5.4 / lxml 6.1.3）
+RUN pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements-plip.txt
+
+RUN useradd -m -u 10001 plipuser && chown -R plipuser:plipuser /app
+USER plipuser
+
+ENTRYPOINT ["python", "run_plip.py"]
+CMD ["--help"]
