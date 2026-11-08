@@ -17,6 +17,9 @@
 #   6. 输出解析：用解析测试 JSON 生成中文报告，检查换算与警告文案
 #   7. Launching 入口：python3 launching.py -p（须装 dp-launching-app，
 #      未装时跳过并说明）
+#   8. 输出收集：按 Boltz 2.2.1 的真实目录结构
+#      boltz_results_<stem>/predictions/<stem>/ 放置假输出，
+#      检查 collect_outputs 能收齐结构、置信度、亲和力
 set -u
 cd "$(dirname "$0")/.."
 
@@ -136,6 +139,32 @@ if python3 -c "import dp.launching" 2>/dev/null; then
 else
   echo "  （跳过：本机未装 dp-launching-app，见 VERIFICATION.md）"
 fi
+
+echo "== 8. 输出收集：Boltz 2.2.1 真实目录结构 =="
+python3 - <<'EOF' > /tmp/boltz2-collect.log 2>&1
+import shutil, sys
+from pathlib import Path
+sys.path.insert(0, ".")
+from run_boltz2 import collect_outputs
+base = Path("examples/kras-g12c-sotorasib/canned")
+out = Path("/tmp/boltz2-test-collect")
+shutil.rmtree(out, ignore_errors=True)
+# 按 Boltz 2.2.1 的真实布局放置假输出
+pred = out / "boltz_results_input" / "predictions" / "input"
+pred.mkdir(parents=True)
+shutil.copy2(base / "confidence.json", pred / "confidence_input_model_0.json")
+shutil.copy2(base / "affinity.json", pred / "affinity_input.json")
+(pred / "input_model_0.pdb").write_text("HEADER fake\n")
+conf, aff, struct, note = collect_outputs(out, "input", "pdb", True)
+assert struct == "predicted.pdb", struct
+assert (out / "predicted.pdb").exists()
+assert (out / "confidence.json").exists()
+assert (out / "affinity.json").exists()
+assert conf is not None and aff is not None
+assert note == "", note
+print("OK collect_outputs finds boltz_results_input layout")
+EOF
+if [ $? -eq 0 ]; then ok "按 2.2.1 真实布局收集输出成功"; else bad "输出收集失败，见 /tmp/boltz2-collect.log"; fi
 
 echo ""
 echo "结果：通过 $PASS，失败 $FAIL（主输出目录：$OUT）"

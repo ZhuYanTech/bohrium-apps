@@ -487,7 +487,14 @@ def collect_outputs(out_dir: Path, stem: str, output_format: str,
     返回（置信度，亲和力，结构文件名，缺失说明）。结构或置信度缺失时，
     置信度返回 None，调用方按失败处理。"""
     ext = "pdb" if output_format == "pdb" else "cif"
-    pred_dir = out_dir / "predictions" / stem
+    # Boltz 2.2.1 的真实输出目录是 boltz_results_<stem>/predictions/<stem>/；
+    # 旧版的 predictions/<stem>/ 仅作兼容回退（2026-11-08 实测发现旧路径
+    # 收不到输出，wrapper 误报失败；见 VERIFICATION.md）。
+    pred_dir = out_dir / f"boltz_results_{stem}" / "predictions" / stem
+    if not (pred_dir / f"{stem}_model_0.{ext}").exists():
+        legacy_dir = out_dir / "predictions" / stem
+        if (legacy_dir / f"{stem}_model_0.{ext}").exists():
+            pred_dir = legacy_dir
     missing: list[str] = []
     structure_src = pred_dir / f"{stem}_model_0.{ext}"
     confidence_src = pred_dir / f"confidence_{stem}_model_0.json"
