@@ -1,0 +1,5 @@
+# Launching 依赖（仅玻尔标准离线/在线任务型镜像用；本地 CLI 不需要）
+# 注意：dp-launching-app 还是 alpha 版（0.1.0-alpha.1），只用于 Launching 镜像。
+# 旧的 dp-launching-sdk 已废弃，不要装。
+bohrium-open-sdk
+dp-launching-app==0.1.0-alpha.1

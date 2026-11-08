@@ -1,0 +1,6 @@
+# Boltz-2 运行时依赖（Dockerfile 用）
+# 只用 Boltz-2 v2.2.1：代码与权重均为 MIT。2.1 只走托管 API，不在 MIT
+# 发布范围内，本封装不用。
+boltz[cuda]==2.2.1
+# cuEquivariance 内核版本钉死（与社区容器一致）。
+cuEquivariance==0.6.1
