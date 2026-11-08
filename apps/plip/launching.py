@@ -47,30 +47,30 @@ class PlipOptions(BaseModel):
     pdb_file: Optional[InputFilePath] = Field(
         default=None,
         title="上传 PDB 文件",
-        description="蛋白-配体复合物结构，须含 HETATM 配体记录",
+        description="蛋白-配体复合物结构文件（PDB/ENT 格式），须含 HETATM 配体记录；与 PDB 编号二选一，优先用上传文件",
         ftypes=["pdb", "ent"],
     )
     pdb_id: Optional[str] = Field(
         default="",
         title="或输入 PDB 编号",
-        description="4 位编号，从 RCSB 下载；与上传文件二选一，优先用上传文件",
+        description="4 位 PDB 编号，如 1VSN、3MXF；自动从 RCSB 下载。与上传文件二选一",
         max_length=4,
     )
     model: int = Field(
         default=1,
         title="模型编号",
-        description="多模型 PDB 时选第几个模型",
+        description="多模型 PDB（如 NMR 结构）选第几个模型，默认 1",
         ge=1,
     )
     ligand: str = Field(
         default="",
         title="只分析指定配体",
-        description="如 JQ1，留空分析全部配体",
+        description="如 JQ1；留空分析全部配体。结晶溶剂（DMS、EDO）可用「过滤结晶溶剂」排除",
     )
     exclude_solvents: bool = Field(
         default=False,
         title="过滤结晶溶剂",
-        description="过滤 DMS、EDO 等常见结晶溶剂/添加剂",
+        description="过滤 DMS、EDO 等常见结晶溶剂/添加剂，只保留目标配体",
     )
     output_dir: OutputDirectory = Field(
         default="./output",

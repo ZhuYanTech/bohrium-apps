@@ -58,6 +58,27 @@ bash examples/test_run.sh
 PLIP_CMD=plip bash examples/test_run.sh
 ```
 
+## 如何解读结果
+
+- `interactions.csv`：每行一个相互作用——类型（中英）、配体、残基（链 + 编号）、
+  距离、详细参数（供体/受体、角度等）。
+- `report_zh.md`：按类型计数、关键残基 Top 10、按配体统计、注意事项。
+- 个数不是亲和力：相互作用多 ≠ 结合强。只用于看结合模式、找关键残基、对照构效关系。
+- 溶剂：结晶溶剂（DMS、EDO 等）也会被算进去。报告按配体分开计数并标出溶剂占比；
+  只看目标配体时用 `--ligand` 或 `--exclude-solvents`。
+- 水桥、盐桥、π-堆积、卤键的判定用 PLIP 默认距离/角度阈值，详见 PLIP 文档。
+
+## 常见问题
+
+- 任务失败 / 无报告：多半是 PDB 里没有配体（HETATM），或文件损坏；先在本地跑
+  `bash examples/test_run.sh` 对照。
+- 0 个相互作用：结构里可能没有配体，或配体离蛋白太远；检查 HETATM 记录和配体三字母代码。
+- 个数和文献对不上：先看是不是溶剂被算进去了（见上）；再看模型编号（多模型 PDB
+  默认只取模型 1）和 PLIP 版本。
+- 没有 PNG 图片：正常。`-y`/`-p` 需要 PyMOL，本镜像没装；3D 查看请用 PyMOL 或
+  Mol* 打开原 PDB。
+- 多模型 PDB（如 NMR）：默认只分析模型 1，改模型编号可换模型。
+
 ## Docker 运行
 
 ```bash
@@ -79,7 +100,8 @@ streamlit run app_streamlit.py
 ## 发布到玻尔
 
 见 [`bohrium/bohrium-publish.md`](bohrium/bohrium-publish.md)（清单 + `bohr` 命令），
-App 元数据见 [`bohrium/app.json`](bohrium/app.json)。
+App 元数据见 [`bohrium/app.json`](bohrium/app.json)。玻尔注册镜像名：
+`zhuyan/plip-bohrium-app:1.0`。
 
 核心模式：**我们只做应用、发布镜像；用户在玻尔上自己开节点、用玻尔算力跑，
 算力费由用户付给玻尔。** 本仓库不调用任何第三方 API，不含任何密钥。
