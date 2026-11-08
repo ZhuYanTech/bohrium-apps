@@ -29,7 +29,7 @@
 cd apps/plip
 docker build -t plip-bohrium-app:1.0 .
 
-# 用 bohr CLI 在玻尔上登记镜像（把 <project_id> 换成真实值）
+# 用 bohr CLI 在玻尔上登记镜像（把 <project_id> 换成你的项目 ID）
 bohr image build --mode local \
   --dockerfile ./Dockerfile --context . \
   --name plip-bohrium-app:1.0 \
@@ -42,7 +42,7 @@ bohr image build --mode local \
 
 ```bash
 bohr job --help   # 按指引提交一次任务，镜像地址用上一步的 imageUrl
-# 输入：1VSN.pdb；期望输出：interactions.csv 有 13 行（PLIP 3.0.1 实测值），
+# 输入：1VSN.pdb；期望输出：interactions.csv 有 13 行（PLIP 3.0.1），
 # report_zh.md 含“相互作用总数：13”。先对上本地结果，再上架。
 ```
 
@@ -59,7 +59,7 @@ bohr job --help   # 按指引提交一次任务，镜像地址用上一步的 im
 
 - [ ] 用玻尔账号打开 App，上传 1VSN.pdb 或填 PDB ID `1VSN`
 - [ ] 任务完成，下载 interactions.csv、report_zh.md，对数：13 个
-- [ ] 再测一个自己的真实结构（实验室的对接结果），确认中文报告可读
+- [ ] 再测一个自己的结构（对接结果），确认中文报告可读
 
 ## 常见问题
 
@@ -68,7 +68,7 @@ bohr job --help   # 按指引提交一次任务，镜像地址用上一步的 im
 | 任务很快失败、无报告 | 多半是 PDB 里没有配体（HETATM），或文件损坏；先在本地跑 `bash examples/test_run.sh` 对照 |
 | 没有 PNG 图片 | 正常。`-y`/`-p` 需要 PyMOL，本镜像故意没装；3D 查看请用 PyMOL 或 Mol* 打开原 PDB |
 | 镜像推送失败 | 检查 `bohr auth login` 是否过期、project-id 是否对、Docker 是否在同一环境 |
-| 想要 PyMOL 出图 | 作为 v1.1 再议：需另装 PyMOL，镜像会变大、构建变慢，不建议放进第一版 |
+| 想要 PyMOL 出图 | 需另装 PyMOL，镜像会变大、构建变慢，默认不装 |
 
 ## 不做的事
 
