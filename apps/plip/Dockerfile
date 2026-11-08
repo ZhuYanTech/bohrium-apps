@@ -3,7 +3,7 @@
 # run_plip.py 一起打进去，且 pip 安装的 plip==3.0.1 已自带 openbabel wheel，
 # 版本可钉死、可复现；pharmai/plip:latest 作为备选见下方注释）。
 # 注意：必须用 3.12，不能用 3.11——requirements-plip.txt 里钉的 numpy==2.5.4
-# 要求 Python >=3.12，在 3.11 上 pip 装不上（2026-11-08 GCP 构建实测失败）。
+# 要求 Python >=3.12，在 3.11 上 pip 装不上。
 # 构建：docker build -t plip-bohrium-app:1.0 .
 # 运行：docker run --rm -v "$PWD:/work" plip-bohrium-app:1.0 \
 #          --pdb-id 1VSN --out-dir /work/plip-output
@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
-# 钉死版本：与 2026-11-07 本地实测一致
+# 钉死版本：plip 3.0.1 / openbabel 3.2.1 / numpy 2.5.4 / lxml 6.1.3
 COPY requirements-plip.txt ./
 RUN pip install --no-cache-dir -r requirements-plip.txt
 

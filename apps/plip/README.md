@@ -1,18 +1,17 @@
-# PLIP 结合模式解析 — 第一个玻尔（Bohrium）App
+# PLIP 结合模式解析 — 玻尔（Bohrium）App
 
-> 本 App 是 [`bohrium-apps`](https://github.com/ZhuYanTech/bohrium-apps) 单一仓库中的第一个应用，位于 `apps/plip/`。
+> 本 App 是 [`bohrium-apps`](https://github.com/ZhuYanTech/bohrium-apps) 单一仓库中的应用，位于 `apps/plip/`。
 > 以下命令均在 `apps/plip/` 目录内执行。
 
 上传蛋白-配体复合物 PDB 文件，或输入 PDB 编号，分析氢键、疏水、卤键、
 盐桥、π-堆积等非共价相互作用，输出相互作用清单（CSV）和中文解读报告。
 
-## 为什么先做 PLIP
+## 特点
 
-- 玻尔上已有 Uni-Fold、ESMFold 做结构预测，再做 Boltz-2 是重复；PLIP 是
-  分析型工具，玻尔上只有论文/infra 条目，没有干净的中文用户版 App。
+- 分析型工具：对蛋白-配体复合物做相互作用分析，与结构预测工具互补。
 - 轻：纯 CPU，不用 GPU，单结构通常 5 分钟内完成。
-- 稳：官方 Docker / pip 都有，GPLv2，引用清楚就能用。
-- 实验室每天都用得上：对接完、拿到晶体结构后，下一步几乎都要做这步解读。
+- PLIP 为 GPLv2，引用清楚就能用。
+- 适用：对接、晶体结构解析后分析结合模式。
 
 ## 输入 / 输出
 
@@ -36,15 +35,14 @@ cat plip-output/report_zh.md
 head plip-output/interactions.csv
 ```
 
-实测（PLIP 3.0.1，2026-11-07）：1VSN 共 **13 个相互作用——氢键 7、疏水 4、卤键 2**，
-关键残基 ASP61（3 个）、TYR67（3 个）。详见 `examples/verified-1vsn/`（真实输出，非编造）。
+（PLIP 3.0.1）1VSN：**13 个相互作用——氢键 7、疏水 4、卤键 2**，
+关键残基 ASP61（3 个）、TYR67（3 个）。详见 `examples/verified-1vsn/`。
 
-第二个例子 3MXF（BRD4 + JQ1）也实测通过：全部配体合计 27 个，但 JQ1 本身
+3MXF（BRD4 + JQ1）：全部配体合计 27 个，JQ1 本身
 14 个（疏水 11、水桥 2、氢键 1，含 ASN140 经典氢键），其余 13 个是结晶溶剂
-DMS、EDO 的。报告现在按配体分开计数（`report_zh.md` “按配体统计”一节，
-并提示溶剂占比），详见 `examples/verified-3mxf/` 和 `VERIFICATION.md` 第 7、9 节。
-Streamlit 界面也已实测启动（HTTP 200、健康检查 ok，
-见 `VERIFICATION.md` 第 8 节）。
+DMS、EDO 的。报告按配体分开计数（`report_zh.md` “按配体统计”一节，
+并提示溶剂占比），详见 `examples/verified-3mxf/` 和 `VERIFICATION.md`。
+Streamlit 界面：启动后首页 HTTP 200、健康检查 ok。
 
 ```bash
 # 只看目标配体 JQ1（14 个），或过滤全部常见结晶溶剂
@@ -80,8 +78,8 @@ streamlit run app_streamlit.py
 
 ## 发布到玻尔
 
-见 [`bohrium/bohrium-publish.md`](bohrium/bohrium-publish.md)（清单 + `bohr` 命令，
-`project-id` 留空待填），App 元数据见 [`bohrium/app.json`](bohrium/app.json)。
+见 [`bohrium/bohrium-publish.md`](bohrium/bohrium-publish.md)（清单 + `bohr` 命令），
+App 元数据见 [`bohrium/app.json`](bohrium/app.json)。
 
 核心模式：**我们只做应用、发布镜像；用户在玻尔上自己开节点、用玻尔算力跑，
 算力费由用户付给玻尔。** 本仓库不调用任何第三方 API，不含任何密钥。
@@ -100,11 +98,11 @@ streamlit run app_streamlit.py
 ├── examples/
 │   ├── test_run.sh            本地验证脚本（9 项检查）
 │   ├── README.md              示例说明
-│   ├── verified-1vsn/         1VSN 真实运行结果（CSV/报告/原始 XML/TXT）
-│   └── verified-3mxf/         3MXF 真实运行结果（同上，含按配体分开的报告）
+│   ├── verified-1vsn/         1VSN 运行结果（CSV/报告/原始 XML/TXT）
+│   └── verified-3mxf/         3MXF 运行结果（同上，含按配体分开的报告）
 └── bohrium/
     ├── bohrium-publish.md     发布清单 + bohr 命令
-    └── app.json               App 元数据草稿（中英描述、输入/输出 schema）
+    └── app.json               App 元数据（中英描述、输入/输出 schema）
 ```
 
 ## 注意事项
@@ -113,7 +111,6 @@ streamlit run app_streamlit.py
   相互作用个数直接当成亲和力高低。
 - 默认不生成 PNG / PyMOL 会话文件，因为 `-y`/`-p` 需要 PyMOL，本镜像故意
   没装（镜像更小、构建更快）。3D 查看请用 PyMOL 或 Mol* 打开原 PDB。
-  如需出图，作为 v1.1 再议。
 - 距离、角度阈值用 PLIP 默认值。
 
 ## 许可与引用
