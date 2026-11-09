@@ -51,7 +51,7 @@ setup_openfold --non-interactive
 # 下面的检查会列出所有 .pt 文件，首次构建时据此调整。
 
 echo "== 校验 =="
-python3 -c "import openfold3; print('openfold3', openfold3.__version__)"
+python3 -c "import importlib.metadata; print('openfold3', importlib.metadata.version('openfold3'))"
 python3 -c "import torch; print('torch', torch.__version__, 'cuda', torch.version.cuda)"
 test -s "$CACHE_DIR/$CKPT_NAME" && echo "检查点 OK: $CACHE_DIR/$CKPT_NAME"
 echo "镜像内所有检查点文件："
