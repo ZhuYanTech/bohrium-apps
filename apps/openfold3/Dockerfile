@@ -28,9 +28,14 @@ RUN mkdir -p /app && \
     chmod +x /app/build.sh /app/run_openfold3.py /app/launching.py && \
     rm -rf /tmp/bohrium-apps
 
-# 3) 其余安装见 build.sh：PyTorch、OpenFold3、OpenBabel、检查点、Launching SDK
+# 3) 其余安装见 build.sh，分步执行以控制单层大小
+#    （单步一个镜像层；此前单步约 14 GB，Bohrium 仓库返回 413）
 WORKDIR /app
-RUN bash /app/build.sh
+RUN bash /app/build.sh torch
+RUN bash /app/build.sh openfold3
+RUN bash /app/build.sh openbabel
+RUN bash /app/build.sh checkpoint
+RUN bash /app/build.sh init
 
 # 4) 镜像内默认用 --inference-ckpt-path 显式指定检查点（不依赖默认检查点名）
 ENTRYPOINT ["python3", "run_openfold3.py"]
