@@ -3,11 +3,17 @@
 #
 # 用法：
 #   bash build.sh all          # 全部步骤（本地手动构建用）
-#   bash build.sh torch        # 步骤 1：PyTorch 2.10（CUDA 12.9）
-#   bash build.sh openfold3    # 步骤 2：OpenFold3 0.5.0 与 Launching SDK
-#   bash build.sh openbabel    # 步骤 3：OpenBabel
-#   bash build.sh checkpoint   # 步骤 4：下载 OpenBind-0 检查点（约 2.29 GB）
-#   bash build.sh init         # 步骤 5：初始化 OpenFold3（CCD）+ 校验
+#   bash build.sh torch-a      # PyTorch 依赖 A：cuDNN
+#   bash build.sh torch-b      # PyTorch 依赖 B：BLAS 与求解器
+#   bash build.sh torch-c      # PyTorch 依赖 C：稀疏、集合通信与 FFT
+#   bash build.sh torch-d      # PyTorch 依赖 D：其余 CUDA 运行时库与绑定
+#   bash build.sh torch-wheel  # PyTorch 2.10 本体（不含依赖）
+#   bash build.sh torch-extra  # PyTorch 其余依赖：triton 与纯 Python 包
+#   bash build.sh torch        # 以上 6 步合起来
+#   bash build.sh openfold3    # OpenFold3 0.5.0 与 Launching SDK
+#   bash build.sh openbabel    # OpenBabel
+#   bash build.sh checkpoint   # 下载 OpenBind-0 检查点（约 2.29 GB）
+#   bash build.sh init         # 初始化 OpenFold3（CCD）+ 校验
 #
 # 分步原因：每步生成一个独立镜像层，避免单层过大被镜像仓库拒绝
 # （此前单步约 14 GB，Bohrium 仓库返回 413 Request Entity Too Large）。
@@ -34,9 +40,47 @@ CKPT_NAME=of3-ob-2025-06-30-174k.pt
 CKPT_URL=https://openfold3-data.s3.amazonaws.com/openfold3-parameters/of3-ob-2025-06-30-174k.pt
 CKPT_SIZE=2287872989
 
-step_torch() {
-  echo "== 安装 PyTorch 2.10（CUDA 12.9）=="
-  python3 -m pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cu129 torch==2.10.0
+# PyTorch 2.10.0+cu129 的依赖（精确版本取自 torch wheel 的 METADATA，
+# 与 torch 2.10.0 配套；分 6 步装，每步一个镜像层，单层控制在约 1.2 GB 以内，
+# 避免超过 Bohrium 仓库的单层上限）。
+TORCH_INDEX=https://download.pytorch.org/whl/cu129
+# A：cuDNN（最大的一块，单独一层）
+NVIDIA_A="nvidia-cudnn-cu12==9.10.2.21"
+# B：BLAS 与求解器
+NVIDIA_B="nvidia-cublas-cu12==12.9.1.4 nvidia-cusolver-cu12==11.7.5.82"
+# C：稀疏、集合通信与 FFT
+NVIDIA_C="nvidia-cusparse-cu12==12.5.10.65 nvidia-nccl-cu12==2.27.5 nvidia-cufft-cu12==11.4.1.4"
+# D：其余 CUDA 运行时库与绑定
+NVIDIA_D="nvidia-curand-cu12==10.3.10.19 nvidia-cusparselt-cu12==0.7.1 nvidia-nvshmem-cu12==3.4.5 nvidia-cuda-nvrtc-cu12==12.9.86 nvidia-cuda-runtime-cu12==12.9.79 nvidia-cuda-cupti-cu12==12.9.79 nvidia-nvtx-cu12==12.9.79 nvidia-nvjitlink-cu12==12.9.86 nvidia-cufile-cu12==1.14.1.1 cuda-bindings==12.9.4"
+
+step_torch_a() {
+  echo "== 安装 PyTorch 依赖 A：cuDNN =="
+  python3 -m pip install --no-cache-dir --index-url "$TORCH_INDEX" $NVIDIA_A
+}
+
+step_torch_b() {
+  echo "== 安装 PyTorch 依赖 B：BLAS 与求解器 =="
+  python3 -m pip install --no-cache-dir --index-url "$TORCH_INDEX" $NVIDIA_B
+}
+
+step_torch_c() {
+  echo "== 安装 PyTorch 依赖 C：稀疏、集合通信与 FFT =="
+  python3 -m pip install --no-cache-dir --index-url "$TORCH_INDEX" $NVIDIA_C
+}
+
+step_torch_d() {
+  echo "== 安装 PyTorch 依赖 D：其余 CUDA 运行时库与绑定 =="
+  python3 -m pip install --no-cache-dir --index-url "$TORCH_INDEX" $NVIDIA_D
+}
+
+step_torch_wheel() {
+  echo "== 安装 PyTorch 2.10 本体（不含依赖）=="
+  python3 -m pip install --no-cache-dir --no-deps --index-url "$TORCH_INDEX" torch==2.10.0
+}
+
+step_torch_extra() {
+  echo "== 安装 PyTorch 其余依赖：triton 与纯 Python 包 =="
+  python3 -m pip install --no-cache-dir --index-url "$TORCH_INDEX" triton==3.6.0 filelock "typing-extensions>=4.10.0" "sympy>=1.13.3" "networkx>=2.5.1" jinja2 "fsspec>=0.8.5"
 }
 
 step_openfold3() {
@@ -82,11 +126,17 @@ step_init() {
 }
 
 case "${1:-all}" in
-  torch) step_torch ;;
+  torch-a) step_torch_a ;;
+  torch-b) step_torch_b ;;
+  torch-c) step_torch_c ;;
+  torch-d) step_torch_d ;;
+  torch-wheel) step_torch_wheel ;;
+  torch-extra) step_torch_extra ;;
+  torch) step_torch_a; step_torch_b; step_torch_c; step_torch_d; step_torch_wheel; step_torch_extra ;;
   openfold3) step_openfold3 ;;
   openbabel) step_openbabel ;;
   checkpoint) step_checkpoint ;;
   init) step_init ;;
-  all) step_torch; step_openfold3; step_openbabel; step_checkpoint; step_init ;;
-  *) echo "未知步骤：$1（可用：torch / openfold3 / openbabel / checkpoint / init / all）" >&2; exit 2 ;;
+  all) step_torch_a; step_torch_b; step_torch_c; step_torch_d; step_torch_wheel; step_torch_extra; step_openfold3; step_openbabel; step_checkpoint; step_init ;;
+  *) echo "未知步骤：$1（可用：torch-a / torch-b / torch-c / torch-d / torch-wheel / torch-extra / torch / openfold3 / openbabel / checkpoint / init / all）" >&2; exit 2 ;;
 esac

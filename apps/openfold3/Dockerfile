@@ -29,9 +29,15 @@ RUN mkdir -p /app && \
     rm -rf /tmp/bohrium-apps
 
 # 3) 其余安装见 build.sh，分步执行以控制单层大小
-#    （单步一个镜像层；此前单步约 14 GB，Bohrium 仓库返回 413）
+#    （单步一个镜像层；此前单步约 14 GB，Bohrium 仓库返回 413；
+#     其中 torch 单步仍有 4.69 GB，故再拆成 6 步，每步约 1.2 GB 以内）
 WORKDIR /app
-RUN bash /app/build.sh torch
+RUN bash /app/build.sh torch-a
+RUN bash /app/build.sh torch-b
+RUN bash /app/build.sh torch-c
+RUN bash /app/build.sh torch-d
+RUN bash /app/build.sh torch-wheel
+RUN bash /app/build.sh torch-extra
 RUN bash /app/build.sh openfold3
 RUN bash /app/build.sh openbabel
 RUN bash /app/build.sh checkpoint
