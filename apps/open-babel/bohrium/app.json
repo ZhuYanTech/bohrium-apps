@@ -16,5 +16,6 @@
   "smoke_arguments": [
     "--molecule_text",
     "CCO"
-  ]
+  ],
+  "input_schema": "schema.json"
 }

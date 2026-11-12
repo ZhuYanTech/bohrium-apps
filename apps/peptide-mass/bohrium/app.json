@@ -16,5 +16,6 @@
   "smoke_arguments": [
     "--sequence",
     "AKR"
-  ]
+  ],
+  "input_schema": "schema.json"
 }

@@ -1,0 +1,208 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "text_file": {
+      "title": "三字母序列文件",
+      "ftypes": [
+        "fasta",
+        "fa",
+        "fas",
+        "faa",
+        "txt",
+        "seq"
+      ],
+      "index": 1,
+      "__current": "field_text_file",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "sequence": {
+      "title": "单行三字母序列",
+      "default": "",
+      "index": 2,
+      "__current": "field_sequence",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "delimiter": {
+      "title": "分隔符（auto、hyphen、space、comma、tab、semicolon、custom）",
+      "default": "auto",
+      "index": 3,
+      "__current": "field_delimiter",
+      "__parent": "Options",
+      "enum": [
+        "auto",
+        "hyphen",
+        "space",
+        "comma",
+        "tab",
+        "semicolon",
+        "custom"
+      ],
+      "type": "string"
+    },
+    "custom_delimiter": {
+      "title": "自定义分隔符",
+      "default": "/",
+      "index": 4,
+      "__current": "field_custom_delimiter",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "unknown": {
+      "title": "未知残基（x、skip、error、bracket）",
+      "default": "x",
+      "index": 5,
+      "__current": "field_unknown",
+      "__parent": "Options",
+      "enum": [
+        "x",
+        "skip",
+        "error",
+        "bracket"
+      ],
+      "type": "string"
+    },
+    "letter_case": {
+      "title": "输出大小写（upper、lower）",
+      "default": "upper",
+      "index": 6,
+      "__current": "field_letter_case",
+      "__parent": "Options",
+      "enum": [
+        "upper",
+        "lower"
+      ],
+      "type": "string"
+    },
+    "preserve_fasta": {
+      "title": "保留 FASTA 标题",
+      "default": true,
+      "index": 7,
+      "__current": "field_preserve_fasta",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "wrap": {
+      "title": "每行字符数",
+      "default": 0,
+      "index": 8,
+      "__current": "field_wrap",
+      "__parent": "Options",
+      "type": "integer"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 9,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "text_file": {
+          "title": "三字母序列文件",
+          "ftypes": [
+            "fasta",
+            "fa",
+            "fas",
+            "faa",
+            "txt",
+            "seq"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "sequence": {
+          "title": "单行三字母序列",
+          "default": "",
+          "index": 2,
+          "type": "string"
+        },
+        "delimiter": {
+          "title": "分隔符（auto、hyphen、space、comma、tab、semicolon、custom）",
+          "default": "auto",
+          "index": 3,
+          "enum": [
+            "auto",
+            "hyphen",
+            "space",
+            "comma",
+            "tab",
+            "semicolon",
+            "custom"
+          ],
+          "type": "string"
+        },
+        "custom_delimiter": {
+          "title": "自定义分隔符",
+          "default": "/",
+          "index": 4,
+          "type": "string"
+        },
+        "unknown": {
+          "title": "未知残基（x、skip、error、bracket）",
+          "default": "x",
+          "index": 5,
+          "enum": [
+            "x",
+            "skip",
+            "error",
+            "bracket"
+          ],
+          "type": "string"
+        },
+        "letter_case": {
+          "title": "输出大小写（upper、lower）",
+          "default": "upper",
+          "index": 6,
+          "enum": [
+            "upper",
+            "lower"
+          ],
+          "type": "string"
+        },
+        "preserve_fasta": {
+          "title": "保留 FASTA 标题",
+          "default": true,
+          "index": 7,
+          "type": "boolean"
+        },
+        "wrap": {
+          "title": "每行字符数",
+          "default": 0,
+          "index": 8,
+          "type": "integer"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 9,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

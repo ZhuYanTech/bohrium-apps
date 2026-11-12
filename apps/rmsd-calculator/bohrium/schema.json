@@ -1,0 +1,326 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "reference": {
+      "title": "参考结构",
+      "ftypes": [
+        "pdb",
+        "ent",
+        "cif",
+        "mmcif",
+        "pdbx"
+      ],
+      "index": 1,
+      "__current": "field_reference",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "comparison": {
+      "title": "待比较结构或 ZIP",
+      "ftypes": [
+        "pdb",
+        "ent",
+        "cif",
+        "mmcif",
+        "pdbx",
+        "zip"
+      ],
+      "index": 2,
+      "__current": "field_comparison",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "reference_id": {
+      "title": "参考 PDB 编号",
+      "default": "",
+      "index": 3,
+      "__current": "field_reference_id",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "comparison_id": {
+      "title": "待比较 PDB 编号",
+      "default": "",
+      "index": 4,
+      "__current": "field_comparison_id",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "atoms": {
+      "title": "测量原子（ca、backbone、protein、heavy、all）",
+      "default": "ca",
+      "index": 5,
+      "__current": "field_atoms",
+      "__parent": "Options",
+      "enum": [
+        "ca",
+        "backbone",
+        "protein",
+        "heavy",
+        "all"
+      ],
+      "type": "string"
+    },
+    "fit_atoms": {
+      "title": "拟合原子（same 或选择码）",
+      "default": "same",
+      "index": 6,
+      "__current": "field_fit_atoms",
+      "__parent": "Options",
+      "enum": [
+        "same",
+        "ca",
+        "backbone",
+        "protein",
+        "heavy",
+        "all"
+      ],
+      "type": "string"
+    },
+    "compare_by": {
+      "title": "比较方式（structure、chain、mapped）",
+      "default": "structure",
+      "index": 7,
+      "__current": "field_compare_by",
+      "__parent": "Options",
+      "enum": [
+        "structure",
+        "chain",
+        "mapped"
+      ],
+      "type": "string"
+    },
+    "chain_mapping": {
+      "title": "链映射，例如 A:X,B:Y",
+      "default": "",
+      "index": 8,
+      "__current": "field_chain_mapping",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "weighting": {
+      "title": "加权方式（uniform、mass）",
+      "default": "uniform",
+      "index": 9,
+      "__current": "field_weighting",
+      "__parent": "Options",
+      "enum": [
+        "uniform",
+        "mass"
+      ],
+      "type": "string"
+    },
+    "models": {
+      "title": "模型（first 或 all）",
+      "default": "first",
+      "index": 10,
+      "__current": "field_models",
+      "__parent": "Options",
+      "enum": [
+        "first",
+        "all"
+      ],
+      "type": "string"
+    },
+    "fit_range": {
+      "title": "拟合残基编号范围",
+      "default": "",
+      "index": 11,
+      "__current": "field_fit_range",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "measure_range": {
+      "title": "测量残基编号范围",
+      "default": "",
+      "index": 12,
+      "__current": "field_measure_range",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "align": {
+      "title": "自动刚体拟合",
+      "default": true,
+      "index": 13,
+      "__current": "field_align",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "fitted": {
+      "title": "返回拟合结构",
+      "default": true,
+      "index": 14,
+      "__current": "field_fitted",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 15,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "reference": {
+          "title": "参考结构",
+          "ftypes": [
+            "pdb",
+            "ent",
+            "cif",
+            "mmcif",
+            "pdbx"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "comparison": {
+          "title": "待比较结构或 ZIP",
+          "ftypes": [
+            "pdb",
+            "ent",
+            "cif",
+            "mmcif",
+            "pdbx",
+            "zip"
+          ],
+          "index": 2,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "reference_id": {
+          "title": "参考 PDB 编号",
+          "default": "",
+          "index": 3,
+          "type": "string"
+        },
+        "comparison_id": {
+          "title": "待比较 PDB 编号",
+          "default": "",
+          "index": 4,
+          "type": "string"
+        },
+        "atoms": {
+          "title": "测量原子（ca、backbone、protein、heavy、all）",
+          "default": "ca",
+          "index": 5,
+          "enum": [
+            "ca",
+            "backbone",
+            "protein",
+            "heavy",
+            "all"
+          ],
+          "type": "string"
+        },
+        "fit_atoms": {
+          "title": "拟合原子（same 或选择码）",
+          "default": "same",
+          "index": 6,
+          "enum": [
+            "same",
+            "ca",
+            "backbone",
+            "protein",
+            "heavy",
+            "all"
+          ],
+          "type": "string"
+        },
+        "compare_by": {
+          "title": "比较方式（structure、chain、mapped）",
+          "default": "structure",
+          "index": 7,
+          "enum": [
+            "structure",
+            "chain",
+            "mapped"
+          ],
+          "type": "string"
+        },
+        "chain_mapping": {
+          "title": "链映射，例如 A:X,B:Y",
+          "default": "",
+          "index": 8,
+          "type": "string"
+        },
+        "weighting": {
+          "title": "加权方式（uniform、mass）",
+          "default": "uniform",
+          "index": 9,
+          "enum": [
+            "uniform",
+            "mass"
+          ],
+          "type": "string"
+        },
+        "models": {
+          "title": "模型（first 或 all）",
+          "default": "first",
+          "index": 10,
+          "enum": [
+            "first",
+            "all"
+          ],
+          "type": "string"
+        },
+        "fit_range": {
+          "title": "拟合残基编号范围",
+          "default": "",
+          "index": 11,
+          "type": "string"
+        },
+        "measure_range": {
+          "title": "测量残基编号范围",
+          "default": "",
+          "index": 12,
+          "type": "string"
+        },
+        "align": {
+          "title": "自动刚体拟合",
+          "default": true,
+          "index": 13,
+          "type": "boolean"
+        },
+        "fitted": {
+          "title": "返回拟合结构",
+          "default": true,
+          "index": 14,
+          "type": "boolean"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 15,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

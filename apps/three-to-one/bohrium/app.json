@@ -16,5 +16,6 @@
   "smoke_arguments": [
     "--sequence",
     "Cys-Tyr-Ile-Gln-Asn-Cys-Pro-Leu-Gly"
-  ]
+  ],
+  "input_schema": "schema.json"
 }

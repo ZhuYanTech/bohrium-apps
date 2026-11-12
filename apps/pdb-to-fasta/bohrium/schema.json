@@ -1,0 +1,204 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "structure": {
+      "title": "PDB 或 ENT 文件",
+      "ftypes": [
+        "pdb",
+        "ent"
+      ],
+      "index": 1,
+      "__current": "field_structure",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "pdb_id": {
+      "title": "四位 PDB 编号",
+      "default": "",
+      "index": 2,
+      "__current": "field_pdb_id",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "sequence_source": {
+      "title": "序列来源（observed 或 seqres）",
+      "default": "observed",
+      "index": 3,
+      "__current": "field_sequence_source",
+      "__parent": "Options",
+      "enum": [
+        "observed",
+        "seqres"
+      ],
+      "type": "string"
+    },
+    "molecule_type": {
+      "title": "分子类型（all、protein、nucleic）",
+      "default": "all",
+      "index": 4,
+      "__current": "field_molecule_type",
+      "__parent": "Options",
+      "enum": [
+        "all",
+        "protein",
+        "nucleic"
+      ],
+      "type": "string"
+    },
+    "chains": {
+      "title": "链编号（逗号分隔）",
+      "default": "",
+      "index": 5,
+      "__current": "field_chains",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "insert_gaps": {
+      "title": "插入编号间缺失残基",
+      "default": false,
+      "index": 6,
+      "__current": "field_insert_gaps",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "include_modified": {
+      "title": "包含已知修饰残基",
+      "default": true,
+      "index": 7,
+      "__current": "field_include_modified",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "header_format": {
+      "title": "标题格式（id_chain、title_chain、chain）",
+      "default": "id_chain",
+      "index": 8,
+      "__current": "field_header_format",
+      "__parent": "Options",
+      "enum": [
+        "id_chain",
+        "title_chain",
+        "chain"
+      ],
+      "type": "string"
+    },
+    "wrap": {
+      "title": "每行字符数（0 表示不换行）",
+      "default": 80,
+      "index": 9,
+      "__current": "field_wrap",
+      "__parent": "Options",
+      "type": "integer"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 10,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "structure": {
+          "title": "PDB 或 ENT 文件",
+          "ftypes": [
+            "pdb",
+            "ent"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "pdb_id": {
+          "title": "四位 PDB 编号",
+          "default": "",
+          "index": 2,
+          "type": "string"
+        },
+        "sequence_source": {
+          "title": "序列来源（observed 或 seqres）",
+          "default": "observed",
+          "index": 3,
+          "enum": [
+            "observed",
+            "seqres"
+          ],
+          "type": "string"
+        },
+        "molecule_type": {
+          "title": "分子类型（all、protein、nucleic）",
+          "default": "all",
+          "index": 4,
+          "enum": [
+            "all",
+            "protein",
+            "nucleic"
+          ],
+          "type": "string"
+        },
+        "chains": {
+          "title": "链编号（逗号分隔）",
+          "default": "",
+          "index": 5,
+          "type": "string"
+        },
+        "insert_gaps": {
+          "title": "插入编号间缺失残基",
+          "default": false,
+          "index": 6,
+          "type": "boolean"
+        },
+        "include_modified": {
+          "title": "包含已知修饰残基",
+          "default": true,
+          "index": 7,
+          "type": "boolean"
+        },
+        "header_format": {
+          "title": "标题格式（id_chain、title_chain、chain）",
+          "default": "id_chain",
+          "index": 8,
+          "enum": [
+            "id_chain",
+            "title_chain",
+            "chain"
+          ],
+          "type": "string"
+        },
+        "wrap": {
+          "title": "每行字符数（0 表示不换行）",
+          "default": 80,
+          "index": 9,
+          "type": "integer"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 10,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

@@ -1,0 +1,330 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "molecule_file": {
+      "title": "分子或结构文件",
+      "ftypes": [
+        "smi",
+        "smiles",
+        "txt",
+        "inchi",
+        "mol",
+        "sdf",
+        "mol2",
+        "pdb",
+        "pdbqt",
+        "xyz",
+        "cif",
+        "can",
+        "cml",
+        "cdx"
+      ],
+      "index": 1,
+      "__current": "field_molecule_file",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "molecule_text": {
+      "title": "分子文本",
+      "default": "",
+      "index": 2,
+      "__current": "field_molecule_text",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "input_format": {
+      "title": "输入格式（auto 或 Open Babel 格式代码）",
+      "default": "auto",
+      "index": 3,
+      "__current": "field_input_format",
+      "__parent": "Options",
+      "enum": [
+        "auto",
+        "smi",
+        "can",
+        "mol",
+        "sdf",
+        "mol2",
+        "pdb",
+        "pdbqt",
+        "xyz",
+        "cif",
+        "inchi",
+        "cml",
+        "cdx",
+        "fasta"
+      ],
+      "type": "string"
+    },
+    "output_format": {
+      "title": "输出格式",
+      "default": "mol",
+      "index": 4,
+      "__current": "field_output_format",
+      "__parent": "Options",
+      "enum": [
+        "smi",
+        "can",
+        "mol",
+        "sdf",
+        "mol2",
+        "pdb",
+        "pdbqt",
+        "xyz",
+        "cif",
+        "inchi",
+        "cml",
+        "fasta",
+        "molreport"
+      ],
+      "type": "string"
+    },
+    "coordinates": {
+      "title": "坐标（none、2d、3d）",
+      "default": "none",
+      "index": 5,
+      "__current": "field_coordinates",
+      "__parent": "Options",
+      "enum": [
+        "none",
+        "2d",
+        "3d"
+      ],
+      "type": "string"
+    },
+    "hydrogens": {
+      "title": "氢原子处理",
+      "default": "none",
+      "index": 6,
+      "__current": "field_hydrogens",
+      "__parent": "Options",
+      "enum": [
+        "none",
+        "add",
+        "polar",
+        "nonpolar",
+        "delete",
+        "delete_nonpolar"
+      ],
+      "type": "string"
+    },
+    "ph": {
+      "title": "pH（留空禁用）",
+      "default": "",
+      "index": 7,
+      "__current": "field_ph",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "charges": {
+      "title": "电荷（none 或 gasteiger）",
+      "default": "none",
+      "index": 8,
+      "__current": "field_charges",
+      "__parent": "Options",
+      "enum": [
+        "none",
+        "gasteiger"
+      ],
+      "type": "string"
+    },
+    "force_field": {
+      "title": "最小化力场（none 或力场名称）",
+      "default": "none",
+      "index": 9,
+      "__current": "field_force_field",
+      "__parent": "Options",
+      "enum": [
+        "none",
+        "MMFF94",
+        "MMFF94s",
+        "UFF",
+        "GAFF",
+        "Ghemical"
+      ],
+      "type": "string"
+    },
+    "minimization_steps": {
+      "title": "最小化步数",
+      "default": 250,
+      "minimum": 1,
+      "maximum": 5000,
+      "index": 10,
+      "__current": "field_minimization_steps",
+      "__parent": "Options",
+      "type": "integer"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 11,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "molecule_file": {
+          "title": "分子或结构文件",
+          "ftypes": [
+            "smi",
+            "smiles",
+            "txt",
+            "inchi",
+            "mol",
+            "sdf",
+            "mol2",
+            "pdb",
+            "pdbqt",
+            "xyz",
+            "cif",
+            "can",
+            "cml",
+            "cdx"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "molecule_text": {
+          "title": "分子文本",
+          "default": "",
+          "index": 2,
+          "type": "string"
+        },
+        "input_format": {
+          "title": "输入格式（auto 或 Open Babel 格式代码）",
+          "default": "auto",
+          "index": 3,
+          "enum": [
+            "auto",
+            "smi",
+            "can",
+            "mol",
+            "sdf",
+            "mol2",
+            "pdb",
+            "pdbqt",
+            "xyz",
+            "cif",
+            "inchi",
+            "cml",
+            "cdx",
+            "fasta"
+          ],
+          "type": "string"
+        },
+        "output_format": {
+          "title": "输出格式",
+          "default": "mol",
+          "index": 4,
+          "enum": [
+            "smi",
+            "can",
+            "mol",
+            "sdf",
+            "mol2",
+            "pdb",
+            "pdbqt",
+            "xyz",
+            "cif",
+            "inchi",
+            "cml",
+            "fasta",
+            "molreport"
+          ],
+          "type": "string"
+        },
+        "coordinates": {
+          "title": "坐标（none、2d、3d）",
+          "default": "none",
+          "index": 5,
+          "enum": [
+            "none",
+            "2d",
+            "3d"
+          ],
+          "type": "string"
+        },
+        "hydrogens": {
+          "title": "氢原子处理",
+          "default": "none",
+          "index": 6,
+          "enum": [
+            "none",
+            "add",
+            "polar",
+            "nonpolar",
+            "delete",
+            "delete_nonpolar"
+          ],
+          "type": "string"
+        },
+        "ph": {
+          "title": "pH（留空禁用）",
+          "default": "",
+          "index": 7,
+          "type": "string"
+        },
+        "charges": {
+          "title": "电荷（none 或 gasteiger）",
+          "default": "none",
+          "index": 8,
+          "enum": [
+            "none",
+            "gasteiger"
+          ],
+          "type": "string"
+        },
+        "force_field": {
+          "title": "最小化力场（none 或力场名称）",
+          "default": "none",
+          "index": 9,
+          "enum": [
+            "none",
+            "MMFF94",
+            "MMFF94s",
+            "UFF",
+            "GAFF",
+            "Ghemical"
+          ],
+          "type": "string"
+        },
+        "minimization_steps": {
+          "title": "最小化步数",
+          "default": 250,
+          "minimum": 1,
+          "maximum": 5000,
+          "index": 10,
+          "type": "integer"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 11,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

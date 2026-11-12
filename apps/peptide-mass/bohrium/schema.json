@@ -1,0 +1,296 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "sequence_file": {
+      "title": "蛋白质序列文件",
+      "ftypes": [
+        "fasta",
+        "fa",
+        "fas",
+        "faa",
+        "txt"
+      ],
+      "index": 1,
+      "__current": "field_sequence_file",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "sequence": {
+      "title": "单条蛋白质序列",
+      "default": "",
+      "index": 2,
+      "__current": "field_sequence",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "pdb_id": {
+      "title": "四位 PDB 编号",
+      "default": "",
+      "index": 3,
+      "__current": "field_pdb_id",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "enzyme": {
+      "title": "酶切规则",
+      "default": "trypsin",
+      "index": 4,
+      "__current": "field_enzyme",
+      "__parent": "Options",
+      "enum": [
+        "trypsin",
+        "trypsin_all",
+        "lys_c",
+        "arg_c",
+        "asp_n",
+        "glu_c_phosphate",
+        "glu_c_bicarbonate",
+        "chymotrypsin",
+        "pepsin",
+        "proteinase_k",
+        "cnbr",
+        "formic_acid"
+      ],
+      "type": "string"
+    },
+    "missed": {
+      "title": "最大漏切位点数",
+      "default": 0,
+      "index": 5,
+      "__current": "field_missed",
+      "__parent": "Options",
+      "type": "integer"
+    },
+    "mass_type": {
+      "title": "质量类型（mono 或 average）",
+      "default": "mono",
+      "index": 6,
+      "__current": "field_mass_type",
+      "__parent": "Options",
+      "enum": [
+        "mono",
+        "average"
+      ],
+      "type": "string"
+    },
+    "ion": {
+      "title": "离子（h、neutral、minus_h、2h、3h）",
+      "default": "h",
+      "index": 7,
+      "__current": "field_ion",
+      "__parent": "Options",
+      "enum": [
+        "h",
+        "neutral",
+        "minus_h",
+        "2h",
+        "3h"
+      ],
+      "type": "string"
+    },
+    "cysteine": {
+      "title": "半胱氨酸修饰（none、cam、cm、vp、acrylamide）",
+      "default": "none",
+      "index": 8,
+      "__current": "field_cysteine",
+      "__parent": "Options",
+      "enum": [
+        "none",
+        "cam",
+        "cm",
+        "vp",
+        "acrylamide"
+      ],
+      "type": "string"
+    },
+    "oxidation": {
+      "title": "甲硫氨酸氧化",
+      "default": false,
+      "index": 9,
+      "__current": "field_oxidation",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "min_mass": {
+      "title": "最低质量或 m/z",
+      "default": "",
+      "index": 10,
+      "__current": "field_min_mass",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "max_mass": {
+      "title": "最高质量或 m/z",
+      "default": "",
+      "index": 11,
+      "__current": "field_max_mass",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "sort_by": {
+      "title": "排序（position 或 mass）",
+      "default": "position",
+      "index": 12,
+      "__current": "field_sort_by",
+      "__parent": "Options",
+      "enum": [
+        "position",
+        "mass"
+      ],
+      "type": "string"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 13,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "sequence_file": {
+          "title": "蛋白质序列文件",
+          "ftypes": [
+            "fasta",
+            "fa",
+            "fas",
+            "faa",
+            "txt"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "sequence": {
+          "title": "单条蛋白质序列",
+          "default": "",
+          "index": 2,
+          "type": "string"
+        },
+        "pdb_id": {
+          "title": "四位 PDB 编号",
+          "default": "",
+          "index": 3,
+          "type": "string"
+        },
+        "enzyme": {
+          "title": "酶切规则",
+          "default": "trypsin",
+          "index": 4,
+          "enum": [
+            "trypsin",
+            "trypsin_all",
+            "lys_c",
+            "arg_c",
+            "asp_n",
+            "glu_c_phosphate",
+            "glu_c_bicarbonate",
+            "chymotrypsin",
+            "pepsin",
+            "proteinase_k",
+            "cnbr",
+            "formic_acid"
+          ],
+          "type": "string"
+        },
+        "missed": {
+          "title": "最大漏切位点数",
+          "default": 0,
+          "index": 5,
+          "type": "integer"
+        },
+        "mass_type": {
+          "title": "质量类型（mono 或 average）",
+          "default": "mono",
+          "index": 6,
+          "enum": [
+            "mono",
+            "average"
+          ],
+          "type": "string"
+        },
+        "ion": {
+          "title": "离子（h、neutral、minus_h、2h、3h）",
+          "default": "h",
+          "index": 7,
+          "enum": [
+            "h",
+            "neutral",
+            "minus_h",
+            "2h",
+            "3h"
+          ],
+          "type": "string"
+        },
+        "cysteine": {
+          "title": "半胱氨酸修饰（none、cam、cm、vp、acrylamide）",
+          "default": "none",
+          "index": 8,
+          "enum": [
+            "none",
+            "cam",
+            "cm",
+            "vp",
+            "acrylamide"
+          ],
+          "type": "string"
+        },
+        "oxidation": {
+          "title": "甲硫氨酸氧化",
+          "default": false,
+          "index": 9,
+          "type": "boolean"
+        },
+        "min_mass": {
+          "title": "最低质量或 m/z",
+          "default": "",
+          "index": 10,
+          "type": "string"
+        },
+        "max_mass": {
+          "title": "最高质量或 m/z",
+          "default": "",
+          "index": 11,
+          "type": "string"
+        },
+        "sort_by": {
+          "title": "排序（position 或 mass）",
+          "default": "position",
+          "index": 12,
+          "enum": [
+            "position",
+            "mass"
+          ],
+          "type": "string"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 13,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

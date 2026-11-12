@@ -16,5 +16,6 @@
   "smoke_arguments": [
     "--structure",
     "examples/ubiquitin.pdb"
-  ]
+  ],
+  "input_schema": "schema.json"
 }

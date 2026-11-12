@@ -16,5 +16,6 @@
   "smoke_arguments": [
     "--smiles",
     "CC(=O)Oc1ccccc1C(=O)O"
-  ]
+  ],
+  "input_schema": "schema.json"
 }

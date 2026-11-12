@@ -1,0 +1,270 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "text_file": {
+      "title": "文本文件",
+      "ftypes": [
+        "fasta",
+        "fa",
+        "fas",
+        "faa",
+        "txt",
+        "csv",
+        "tsv",
+        "seq"
+      ],
+      "index": 1,
+      "__current": "field_text_file",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "sequence": {
+      "title": "单行文本",
+      "default": "",
+      "index": 2,
+      "__current": "field_sequence",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "multi": {
+      "title": "分组方式（auto、blank、join、custom）",
+      "default": "auto",
+      "index": 3,
+      "__current": "field_multi",
+      "__parent": "Options",
+      "enum": [
+        "auto",
+        "blank",
+        "join",
+        "custom"
+      ],
+      "type": "string"
+    },
+    "separator": {
+      "title": "自定义分隔符",
+      "default": "",
+      "index": 4,
+      "__current": "field_separator",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "sequence_type": {
+      "title": "序列类型（auto、dna、rna、nucleotide、protein）",
+      "default": "auto",
+      "index": 5,
+      "__current": "field_sequence_type",
+      "__parent": "Options",
+      "enum": [
+        "auto",
+        "dna",
+        "rna",
+        "nucleotide",
+        "protein"
+      ],
+      "type": "string"
+    },
+    "names": {
+      "title": "标题（input 或 numbered）",
+      "default": "input",
+      "index": 6,
+      "__current": "field_names",
+      "__parent": "Options",
+      "enum": [
+        "input",
+        "numbered"
+      ],
+      "type": "string"
+    },
+    "wrap": {
+      "title": "每行字符数（0 表示不换行）",
+      "default": 0,
+      "index": 7,
+      "__current": "field_wrap",
+      "__parent": "Options",
+      "type": "integer"
+    },
+    "letter_case": {
+      "title": "字母大小写（upper、lower、original）",
+      "default": "upper",
+      "index": 8,
+      "__current": "field_letter_case",
+      "__parent": "Options",
+      "enum": [
+        "upper",
+        "lower",
+        "original"
+      ],
+      "type": "string"
+    },
+    "validation": {
+      "title": "校验（lenient、strict、off）",
+      "default": "lenient",
+      "index": 9,
+      "__current": "field_validation",
+      "__parent": "Options",
+      "enum": [
+        "lenient",
+        "strict",
+        "off"
+      ],
+      "type": "string"
+    },
+    "keep_gaps": {
+      "title": "保留缺口",
+      "default": false,
+      "index": 10,
+      "__current": "field_keep_gaps",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "keep_stops": {
+      "title": "保留终止符",
+      "default": false,
+      "index": 11,
+      "__current": "field_keep_stops",
+      "__parent": "Options",
+      "type": "boolean"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 12,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "text_file": {
+          "title": "文本文件",
+          "ftypes": [
+            "fasta",
+            "fa",
+            "fas",
+            "faa",
+            "txt",
+            "csv",
+            "tsv",
+            "seq"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "sequence": {
+          "title": "单行文本",
+          "default": "",
+          "index": 2,
+          "type": "string"
+        },
+        "multi": {
+          "title": "分组方式（auto、blank、join、custom）",
+          "default": "auto",
+          "index": 3,
+          "enum": [
+            "auto",
+            "blank",
+            "join",
+            "custom"
+          ],
+          "type": "string"
+        },
+        "separator": {
+          "title": "自定义分隔符",
+          "default": "",
+          "index": 4,
+          "type": "string"
+        },
+        "sequence_type": {
+          "title": "序列类型（auto、dna、rna、nucleotide、protein）",
+          "default": "auto",
+          "index": 5,
+          "enum": [
+            "auto",
+            "dna",
+            "rna",
+            "nucleotide",
+            "protein"
+          ],
+          "type": "string"
+        },
+        "names": {
+          "title": "标题（input 或 numbered）",
+          "default": "input",
+          "index": 6,
+          "enum": [
+            "input",
+            "numbered"
+          ],
+          "type": "string"
+        },
+        "wrap": {
+          "title": "每行字符数（0 表示不换行）",
+          "default": 0,
+          "index": 7,
+          "type": "integer"
+        },
+        "letter_case": {
+          "title": "字母大小写（upper、lower、original）",
+          "default": "upper",
+          "index": 8,
+          "enum": [
+            "upper",
+            "lower",
+            "original"
+          ],
+          "type": "string"
+        },
+        "validation": {
+          "title": "校验（lenient、strict、off）",
+          "default": "lenient",
+          "index": 9,
+          "enum": [
+            "lenient",
+            "strict",
+            "off"
+          ],
+          "type": "string"
+        },
+        "keep_gaps": {
+          "title": "保留缺口",
+          "default": false,
+          "index": 10,
+          "type": "boolean"
+        },
+        "keep_stops": {
+          "title": "保留终止符",
+          "default": false,
+          "index": 11,
+          "type": "boolean"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 12,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

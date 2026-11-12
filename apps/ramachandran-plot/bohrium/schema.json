@@ -1,0 +1,84 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "structure": {
+      "title": "蛋白质结构文件",
+      "ftypes": [
+        "pdb",
+        "ent",
+        "cif",
+        "mmcif",
+        "pdbx"
+      ],
+      "index": 1,
+      "__current": "field_structure",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "pdb_id": {
+      "title": "四位 PDB 编号",
+      "default": "",
+      "index": 2,
+      "__current": "field_pdb_id",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 3,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "structure": {
+          "title": "蛋白质结构文件",
+          "ftypes": [
+            "pdb",
+            "ent",
+            "cif",
+            "mmcif",
+            "pdbx"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "pdb_id": {
+          "title": "四位 PDB 编号",
+          "default": "",
+          "index": 2,
+          "type": "string"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 3,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

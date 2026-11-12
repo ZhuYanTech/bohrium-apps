@@ -16,5 +16,6 @@
   "smoke_arguments": [
     "--sequence",
     "1 mkt ayia"
-  ]
+  ],
+  "input_schema": "schema.json"
 }

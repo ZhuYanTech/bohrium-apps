@@ -18,5 +18,6 @@
     "MKTAYIAKQR",
     "--window",
     "5"
-  ]
+  ],
+  "input_schema": "schema.json"
 }

@@ -1,0 +1,100 @@
+{
+  "model_type": "single",
+  "documentation": "",
+  "description": "",
+  "schema_properties": {
+    "structure": {
+      "title": "结构文件或多结构 ZIP",
+      "ftypes": [
+        "pdb",
+        "ent",
+        "cif",
+        "mmcif",
+        "pdbx",
+        "zip"
+      ],
+      "index": 1,
+      "__current": "field_structure",
+      "__parent": "Options",
+      "format": "input_file_path",
+      "scope": "io",
+      "type": "string"
+    },
+    "pdb_id": {
+      "title": "四位 PDB 编号",
+      "default": "",
+      "index": 2,
+      "__current": "field_pdb_id",
+      "__parent": "Options",
+      "type": "string"
+    },
+    "probe_radius": {
+      "title": "探针半径（Å）",
+      "default": 1.4,
+      "index": 3,
+      "__current": "field_probe_radius",
+      "__parent": "Options",
+      "type": "number"
+    },
+    "output_dir": {
+      "title": "输出目录",
+      "default": "./output",
+      "index": 4,
+      "__current": "field_output_dir",
+      "__parent": "Options",
+      "format": "output_directory",
+      "scope": "io",
+      "type": "string"
+    }
+  },
+  "schema_references": {},
+  "required_properties": [],
+  "__internal_meta__": {
+    "Options": {
+      "title": "Options",
+      "type": "object",
+      "properties": {
+        "structure": {
+          "title": "结构文件或多结构 ZIP",
+          "ftypes": [
+            "pdb",
+            "ent",
+            "cif",
+            "mmcif",
+            "pdbx",
+            "zip"
+          ],
+          "index": 1,
+          "format": "input_file_path",
+          "scope": "io",
+          "type": "string"
+        },
+        "pdb_id": {
+          "title": "四位 PDB 编号",
+          "default": "",
+          "index": 2,
+          "type": "string"
+        },
+        "probe_radius": {
+          "title": "探针半径（Å）",
+          "default": 1.4,
+          "index": 3,
+          "type": "number"
+        },
+        "output_dir": {
+          "title": "输出目录",
+          "default": "./output",
+          "index": 4,
+          "format": "output_directory",
+          "scope": "io",
+          "type": "string"
+        }
+      }
+    },
+    "BaseModel": {
+      "title": "BaseModel",
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

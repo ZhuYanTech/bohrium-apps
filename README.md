@@ -7,7 +7,7 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
 
 > 原则（不变）：玻尔有自己的计算引擎。我们只做应用、发布镜像；
 > 用户在玻尔上自己开节点、用玻尔算力跑，算力费由用户付给玻尔。
-> 这里的任何应用都不调用第三方 API，不含任何密钥。
+> 应用计算在玻尔完成。支持 PDB 编号的应用可按编号读取公开结构数据。仓库不含密钥。
 
 仓库：https://github.com/ZhuYanTech/bohrium-apps
 
@@ -23,6 +23,8 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
 
 典型串法：`boltz2` / `openfold3` 出结构 → `posebusters` 把关姿势质量 →
 `plip` 分析通过筛选的姿势的相互作用。中间这一步能挡掉大量无效的后续计算。
+
+新增的 10 个 CPU 应用及其测试页、镜像摘要和输出验算见[批量验收](apps/BATCH-10-VERIFICATION.md)。
 
 各应用的验证记录见各自目录下的 `VERIFICATION.md`：
 
@@ -76,8 +78,8 @@ All open-source apps ZhuYanTech publishes on the Deep Potential Bohrium platform
 **No separate repo per app**: a new app is a new folder under `apps/`.
 
 > Standing rule: Bohrium has its own compute engine. We only build and publish apps;
-> users run them on Bohrium compute and pay Bohrium. No app here calls any
-> third-party API, and no credentials are stored anywhere in this repo.
+> users run them on Bohrium compute and pay Bohrium. Apps with a PDB ID field can retrieve
+> public structure data. This repository contains no credentials.
 
 Repository: https://github.com/ZhuYanTech/bohrium-apps
 
@@ -94,7 +96,9 @@ Repository: https://github.com/ZhuYanTech/bohrium-apps
 Typical chain: `boltz2` / `openfold3` produce structures, `posebusters` filters out
 implausible poses, `plip` profiles the interactions of what survives.
 
-Verification records live in each app's own `VERIFICATION.md`.
+See [batch verification](apps/BATCH-10-VERIFICATION.md) for ten additional CPU apps,
+their test pages, image digests, and result checks. Individual verification records
+are also available in the relevant app directories.
 
 ## Adding a new app
 

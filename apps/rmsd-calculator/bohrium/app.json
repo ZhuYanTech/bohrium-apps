@@ -18,5 +18,6 @@
     "examples/ubiquitin.pdb",
     "--comparison",
     "examples/ubiquitin.pdb"
-  ]
+  ],
+  "input_schema": "schema.json"
 }
