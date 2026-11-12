@@ -1,6 +1,6 @@
 ## 选择一种输入
 
-- **粘贴序列**：单条裸序列或多条 FASTA。裸序列的编号为 `Sequence`。
+- **粘贴序列**：玻尔网页提供单行文本框，可粘贴单条裸序列。多行或多条 FASTA 请上传文件；命令行支持多行文本。裸序列的编号为 `Sequence`。
 - **上传文件**：FASTA（`.fasta/.fa/.fas/.faa`）、TXT、CSV 或 PDB。CSV 使用 `id,sequence` 列，也接受 `name,seq`。PDB 读取首个模型有坐标的蛋白链；支持部分已知修饰残基，例如 MSE。
 - **结构编号**：填写四位 RCSB PDB 编号以查询 FASTA。查询需要运行环境能访问 RCSB。
 

@@ -1,6 +1,6 @@
 ## Choose one input method
 
-- **Paste sequence**: One plain protein sequence or multiple FASTA records. Plain input is labeled `Sequence`.
+- **Paste sequence**: The Bohrium web form uses a single-line text field. Paste one plain sequence, or upload a file for multi-line or multi-record FASTA. The command line accepts multi-line text. Plain input is labeled `Sequence`.
 - **Upload a file**: FASTA (`.fasta/.fa/.fas/.faa`), TXT, CSV, or PDB. CSV accepts `id,sequence` or `name,seq`. PDB parsing uses coordinate-bearing protein chains in the first model and maps recognized modified residues such as MSE.
 - **Structure ID**: Enter a four-character RCSB PDB ID to retrieve FASTA. Lookup requires network access to RCSB.
 
