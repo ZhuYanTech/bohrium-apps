@@ -1,0 +1,16 @@
+{
+  "name": "protein-aliphatic-index",
+  "version": "1.0.0",
+  "developer": "ZhuYanTech",
+  "display_name_zh": "蛋白质脂肪族指数",
+  "display_name_en": "Protein Aliphatic Index",
+  "description_zh": "批量计算蛋白质序列的 Ikai 脂肪族指数。上传 FASTA 文件，下载每条序列的长度、脂肪族残基计数和指数 CSV。",
+  "description_en": "Calculate the Ikai aliphatic index for protein sequences in a FASTA file. Download sequence lengths, aliphatic residue counts and indices as CSV.",
+  "type": "标准离线任务",
+  "entrypoint": "/app/launching.py",
+  "inputs": [{"name": "fasta", "type": "file", "required": true, "extensions": ["fasta", "fa", "faa", "txt"]}],
+  "outputs": [{"name": "aliphatic_index.csv", "type": "csv"}],
+  "tool_reference": "https://proteiniq.io/app/aliphatic-index",
+  "formula_reference": "https://web.expasy.org/protparam/protparam-doc.html",
+  "license": "MIT"
+}

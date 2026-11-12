@@ -19,6 +19,7 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
 | **PoseBusters 对接姿势质量检查** | 对接或 AI 预测出的配体姿势到底站不站得住：化学有效性、分子内几何、与口袋的相容性、与晶体结构的 RMSD，共 28 项检查，输出汇总表 + 中文报告。通常 1 分钟内完成。 | CPU | [`apps/posebusters/`](apps/posebusters/) |
 | **Boltz-2 共折叠与亲和力预测** | 输入蛋白序列 + 配体 SMILES，一次给出复合物结构和结合亲和力（结合概率、预测 log10(IC50)）。 | GPU | [`apps/boltz2/`](apps/boltz2/) |
 | **OpenFold3 结构预测** | 输入蛋白序列（可加配体、DNA、RNA），预测复合物三维结构，输出 CIF/PDB + 置信度 + 中文报告。 | GPU | [`apps/openfold3/`](apps/openfold3/) |
+| **蛋白质脂肪族指数** | 批量读取 FASTA，计算 Ikai 脂肪族指数并导出 CSV。 | CPU | [`apps/aliphatic-index/`](apps/aliphatic-index/) |
 
 典型串法：`boltz2` / `openfold3` 出结构 → `posebusters` 把关姿势质量 →
 `plip` 分析通过筛选的姿势的相互作用。中间这一步能挡掉大量无效的后续计算。
@@ -88,6 +89,7 @@ Repository: https://github.com/ZhuYanTech/bohrium-apps
 | **PoseBusters docking pose validator** | Check whether docked or AI-generated ligand poses are chemically and physically valid: up to 28 checks covering chemical validity, intramolecular geometry, pocket compatibility and RMSD to a crystal pose. | CPU | [`apps/posebusters/`](apps/posebusters/) |
 | **Boltz-2 co-folding and affinity** | Protein sequence + ligand SMILES in, complex structure and binding affinity out. | GPU | [`apps/boltz2/`](apps/boltz2/) |
 | **OpenFold3 structure prediction** | Protein sequence (optionally with ligands, DNA, RNA) in, complex structure + confidence + Chinese report out. | GPU | [`apps/openfold3/`](apps/openfold3/) |
+| **Protein Aliphatic Index** | Calculate the Ikai index for protein sequences in a FASTA file and export CSV. | CPU | [`apps/aliphatic-index/`](apps/aliphatic-index/) |
 
 Typical chain: `boltz2` / `openfold3` produce structures, `posebusters` filters out
 implausible poses, `plip` profiles the interactions of what survives.
