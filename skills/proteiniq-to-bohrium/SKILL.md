@@ -6,7 +6,7 @@ description: Create or finish an independently runnable Bohrium offline App base
 # 将 ProteinIQ 工具部署到玻尔
 
 1. 用 Ego Lite 查看用户打开的 ProteinIQ、玻尔和 GitHub 标签页。先核对 `ZhuYanTech/bohrium-apps` 的 `apps/` 与玻尔开发者中心，避免重复创建。按用户范围挑选候选。初次验证优先选能独立运行、CPU 足够、有明确方法和可手算基准的工具。需要复用第三方代码或权重时，核对许可与分发条件。
-2. 在仓库的 `apps/<slug>/` 实现独立计算入口、`launching.py`、Dockerfile、应用元数据和输入样例。参考已验证的 [脂肪族指数应用](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/aliphatic-index)。在代码中保留上游许可证和必要引用。先验证正常及无效输入，直接执行 Launching 入口，并用 `--gen-schema` 检查平台参数声明。提交用户授权保存的代码。
+2. 在仓库的 `apps/<slug>/` 实现独立计算入口、`launching.py`、Dockerfile、应用元数据和输入样例。参考已验证的 [脂肪族指数应用](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/aliphatic-index)。在代码中保留上游许可证和必要引用。先验证正常及无效输入，直接执行 Launching 入口，并用 `--gen-schema` 检查平台参数声明。逐一核对所宣称的文件格式与实际解析能力。若详细输出开关只增加诊断列，用同一输入比较开关前后的汇总结论。提交用户授权保存的代码。
 3. 分别检查项目自定义镜像、开发者镜像仓库的版本和开发者 App 的版本。空镜像仓库只表示名称已创建。项目已有可用镜像时，核对架构、版本、入口和样例后复用，已有仓库或 App 则在原记录续做。需要新镜像时，先本地验证容器再推送。用一个与版本绑定的标签，提交结果未知时先回查同名镜像和状态再决定是否重试。
 4. 在开发者中心先为镜像仓库绑定已可用的镜像版本，再创建标准离线任务，给 App 版本绑定同一镜像。等版本从「处理中」变为「待发布」，用该版本操作栏的「查看测试链接」检查表单并运行样例。下载输出，对照预期值。用户只要求创建时，以测试版本交付。公开上架按用户要求处理。
 

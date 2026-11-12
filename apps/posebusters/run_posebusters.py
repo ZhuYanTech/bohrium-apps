@@ -32,9 +32,6 @@ from pathlib import Path
 
 RCSB_URL = "https://files.rcsb.org/download/{pdb_id}.pdb"
 
-# 元信息列（不是检查项）
-META_COLS = ("file", "molecule", "position")
-
 # 检查项 -> (中文名, 分组, 失败时的解读与处理建议)
 CHECKS: dict[str, tuple[str, str, str]] = {
     "mol_pred_loaded": ("预测姿势可读取", "A 读取与化学有效性",
@@ -42,7 +39,7 @@ CHECKS: dict[str, tuple[str, str, str]] = {
     "mol_true_loaded": ("参考配体可读取", "A 读取与化学有效性",
         "晶体参考配体文件打不开。确认 SDF 完整。"),
     "mol_cond_loaded": ("蛋白结构可读取", "A 读取与化学有效性",
-        "蛋白文件打不开。确认 PDB/CIF 完整，且已去掉要对接的那个配体。"),
+        "蛋白文件打不开。确认 PDB 文件完整，且已去掉要对接的那个配体。"),
     "sanitization": ("化学净化通过", "A 读取与化学有效性",
         "RDKit 认为这个分子化学上非法（价态、芳香性等）。多半是生成模型吐出了不合法结构。"),
     "inchi_convertible": ("可转为 InChI", "A 读取与化学有效性",
@@ -111,6 +108,7 @@ MODE_DESC = {
     "mol": "mol（只给了预测姿势：检查化学有效性与分子内几何）",
     "dock": "dock（预测姿势 + 蛋白：另查与口袋的相容性）",
     "redock": "redock（预测姿势 + 蛋白 + 晶体配体：另查与参考的一致性和 RMSD）",
+    "reference_only": "参考配体模式（未提供蛋白，跳过与口袋相容性的检查）",
 }
 
 
@@ -223,7 +221,8 @@ def summarize(rows: list[dict], mode: str) -> tuple[list[dict], list[str]]:
     """把明细表压成每个姿势一行；同时返回本次实际执行了哪些检查项。"""
     if not rows:
         raise SystemExit("结果表是空的。")
-    check_cols = [c for c in rows[0] if c not in META_COLS]
+    # 完整明细还包含数值和中间布尔结果，仅汇总预设的正式检查项。
+    check_cols = [c for c in rows[0] if c in CHECKS]
     # 本次实际跑了的检查项：至少有一行给出了 True/False
     active = [c for c in check_cols
               if any(as_bool(r.get(c, "")) is not None for r in rows)]
@@ -373,7 +372,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--mol-pred", required=True,
                    help="待检查的配体姿势文件（SDF/MOL/MOL2/PDB），可含多个分子或多个构象")
     p.add_argument("--protein", default=None,
-                   help="蛋白结构文件（PDB/CIF），应已去掉要对接的那个配体；给了就启用 dock 模式")
+                   help="蛋白结构文件（PDB），应已去掉要对接的那个配体；给了就启用 dock 模式")
     p.add_argument("--pdb-id", default=None,
                    help="或给 4 位 PDB 编号，从 RCSB 下载蛋白（与 --protein 二选一）")
     p.add_argument("--strip-ligand", default=None,
@@ -449,10 +448,10 @@ def main(argv: list[str] | None = None) -> int:
         if not mol_true.is_file():
             raise SystemExit(f"找不到晶体参考配体文件：{mol_true}")
 
-    if mol_true is not None and mol_cond is None:
-        log("提示：给了晶体参考配体但没给蛋白，与口袋相容性的那组检查会跳过。")
-
-    mode = "redock" if mol_true is not None else ("dock" if mol_cond is not None else "mol")
+    if mol_true is not None:
+        mode = "redock" if mol_cond is not None else "reference_only"
+    else:
+        mode = "dock" if mol_cond is not None else "mol"
     log(f"检查模式：{MODE_DESC[mode]}")
 
     detail_csv = raw_dir / "posebusters_raw.csv"

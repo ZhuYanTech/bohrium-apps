@@ -53,9 +53,9 @@ class PoseBustersOptions(BaseModel):
     protein_file: Optional[InputFilePath] = Field(
         default=None,
         title="蛋白结构（可选）",
-        description="受体蛋白结构（PDB/CIF）。给了就增加「与口袋的相容性」检查："
+        description="受体蛋白结构（PDB）。给了就增加「与口袋的相容性」检查："
                     "原子碰撞、体积穿模、配体是否跑出口袋",
-        ftypes=["pdb", "cif", "ent"],
+        ftypes=["pdb"],
     )
     pdb_id: Optional[str] = Field(
         default="",
@@ -144,8 +144,6 @@ def main(opts: PoseBustersOptions) -> int:
     mol_true = _resolve_path(opts.mol_true)
     if mol_true:
         argv += ["--mol-true", mol_true]
-        if not protein and not pdb_id:
-            print("提示：给了晶体参考配体但没给蛋白，与口袋相容性的那组检查会跳过。")
 
     if (opts.strip_ligand or "").strip():
         argv += ["--strip-ligand", opts.strip_ligand.strip()]

@@ -18,6 +18,7 @@ RUN set -eu; \
     dataset="$(python -c 'import pathlib, posebusters; print(pathlib.Path(posebusters.__file__).parent / "datasets/pdb/1ia1")')"; \
     python /app/launching.py --mol_pred "$dataset/1ia1_ligand.sdf" \
       --mol_true "$dataset/1ia1_ligand.sdf" \
-      --protein_file "$dataset/1ia1_protein_one_lig_removed.pdb" --output_dir /tmp/smoke; \
+      --protein_file "$dataset/1ia1_protein_one_lig_removed.pdb" \
+      --enable-full_report --output_dir /tmp/smoke; \
     python -c 'import csv; rows = list(csv.DictReader(open("/tmp/smoke/summary.csv", encoding="utf-8-sig"))); assert len(rows) == 1 and rows[0]["通过项数"] == rows[0]["检查项总数"] == "28" and rows[0]["PB_valid"] == "是", rows'; \
     rm -rf /tmp/smoke

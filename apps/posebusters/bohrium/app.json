@@ -5,9 +5,11 @@
   "display_name_zh": "PoseBusters 对接姿势质量检查",
   "display_name_en": "PoseBusters Docking Pose Validator",
   "category": "药物发现 / 分子对接",
-  "description_zh": "对接或 AI 结构预测出来的配体姿势，到底站不站得住？上传姿势文件（可选蛋白、可选晶体配体），逐项检查化学有效性、分子内几何、与口袋的相容性、与晶体结构的吻合度，输出明细表 + 每个姿势一行的汇总 + 中文解读报告。开源 PoseBusters 0.6.5，纯 CPU，通常 1 分钟内完成。",
-  "description_en": "Check whether docked or AI-generated ligand poses are chemically and physically valid. Upload poses (optionally with protein and crystal ligand) and get a per-check table, a per-pose summary, and a Chinese report. PoseBusters 0.6.5, CPU-only.",
-  "long_description_en": "PoseBusters runs up to 28 checks on each ligand pose: chemical validity (sanitization, connectivity, radicals), consistency with a reference molecule (formula, bonds, stereochemistry, chirality), intramolecular geometry (bond lengths and angles, steric clash, ring flatness, internal energy), compatibility with the binding pocket (distances to and volume overlap with protein, cofactors and waters), and accuracy against a crystal pose (RMSD <= 2 A). Three modes are selected automatically from the inputs given: mol (poses only, 12 checks), dock (poses + protein, 22 checks), redock (poses + protein + crystal ligand, 28 checks).",
+  "description_zh": "检查配体姿势的化学有效性、分子内几何、与受体的相容性及与晶体参考的一致性，最多 28 项，输出 CSV 和中文报告。",
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "description_en": "Validate ligand poses for chemical validity, 3D geometry, receptor clashes, and agreement with an optional crystal reference.",
+  "long_description_en": "PoseBusters runs up to 28 checks on each ligand pose: chemical validity (sanitization, connectivity, radicals), consistency with a reference molecule (formula, bonds, stereochemistry, chirality), intramolecular geometry (bond lengths and angles, steric clash, ring flatness, internal energy), compatibility with the binding pocket (distances to and volume overlap with protein, cofactors and waters), and accuracy against a crystal pose (RMSD <= 2 A). The inputs determine which checks run: 12 for poses alone, 18 for poses and a crystal reference, 22 for poses and a receptor, and 28 when all three are supplied.",
   "compute": {
     "engine": "Bohrium（用户自付算力）",
     "resource": "CPU 即可，无需 GPU",
@@ -25,7 +27,7 @@
     {
       "name": "protein_file",
       "type": "file",
-      "format": "PDB / CIF",
+      "format": "PDB",
       "label_zh": "蛋白结构（可选）",
       "description_zh": "给了就增加「与口袋的相容性」检查：原子碰撞、体积穿模、配体是否跑出口袋",
       "required": false
@@ -42,7 +44,7 @@
     {
       "name": "mol_true",
       "type": "file",
-      "format": "SDF",
+      "format": "SDF / MOL",
       "label_zh": "晶体参考配体（可选）",
       "description_zh": "给了就增加「与参考一致」和「RMSD ≤ 2 Å」检查，用于回顾性评估对接准确度",
       "required": false
