@@ -1,6 +1,6 @@
 ---
 name: proteiniq-to-bohrium
-description: Create or finish an independently runnable Bohrium offline App based on a ProteinIQ tool or an existing open-source wrapper. Use for picking tools, recovering unfinished mirror and App records, completing bilingual listing content, verifying outputs, and saving the implementation to ZhuYanTech/bohrium-apps.
+description: Create or finish an independently runnable Bohrium offline App based on a ProteinIQ tool or an existing open-source wrapper. Use for picking tools, recovering unfinished image and App records, completing bilingual listing content, verifying outputs, and saving the implementation to ZhuYanTech/bohrium-apps.
 ---
 
 # 将 ProteinIQ 工具部署到玻尔
@@ -12,9 +12,9 @@ description: Create or finish an independently runnable Bohrium offline App base
 
 ## 补全开发者页面
 
-镜像和 App 分别填写中英文简述、相关标签、中文和英文介绍、中文和英文帮助。介绍交代算法目的、输入决定的模式和解释边界；帮助写实际文件格式、配置和结果文件，并给一个可复现的样例。以来源页校对算法和示例，以部署版本为准核对输入与输出。来源页额外支持的操作只在确有必要时说明差异。按用户要求，玻尔页面的「来源」只链接开源 GitHub 仓库，保留适用的上游许可证和归属。
+镜像和 App 分别填写中英文简述、相关标签、中文和英文介绍、中文和英文帮助。介绍交代算法目的、输入决定的模式和解释边界；帮助写实际文件格式、配置和结果文件，并给一个可复现的样例。以来源页校对算法和示例，以部署版本为准核对输入与输出。来源页额外支持的操作只在确有必要时说明差异。按用户要求，玻尔页面的「来源」只链接开源 GitHub 仓库，许可证核对实际打包版本随附的 LICENSE，并与上游仓库交叉验证。
 
-用 Ego Lite 编辑时分别保存每个语言页。切换栏目后等当前编辑器或文档加载完成，遇到白屏先回到相同栏目并检查上次保存的内容。最后刷新，逐页核对描述、标签、八份文档、示例数值和来源链接。可以把双语正文保存在应用的 `bohrium/docs/`，参考 [PoseBusters 文档](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/posebusters/bohrium/docs)。
+用 Ego Lite 编辑时分别保存每个语言页。替换正文时先清空编辑器并确认旧内容已移除，再粘贴全文，对照完整内容后保存。只检查开头可能漏掉残留模板或重复段落。从页面点击目标栏目并核对面板标题。镜像帮助和 App 帮助使用不同页面参数。切换栏目后等当前编辑器或文档加载完成，遇到白屏先回到相同栏目并检查上次保存的内容。最后刷新，逐页核对描述、标签、八份文档、示例数值和来源链接。可以把双语正文保存在应用的 `bohrium/docs/`，参考 [PoseBusters 文档](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/posebusters/bohrium/docs)。
 
 ## 构建和上传
 

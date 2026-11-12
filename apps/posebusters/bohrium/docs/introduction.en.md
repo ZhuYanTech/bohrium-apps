@@ -12,5 +12,5 @@ The Bohrium implementation selects the mode automatically. A pose that passes me
 
 ## Open-source repositories
 
-- [Upstream PoseBusters (BSD-3-Clause)](https://github.com/maabuu/posebusters)
+- [Upstream PoseBusters (MIT)](https://github.com/maabuu/posebusters)
 - [ZhuYanTech Bohrium wrapper (MIT)](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/posebusters)

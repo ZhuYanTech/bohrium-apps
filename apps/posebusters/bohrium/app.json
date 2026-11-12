@@ -105,7 +105,7 @@
     "homepage": "https://github.com/maabuu/posebusters",
     "version_pinned": "posebusters==0.6.5, rdkit==2026.9.2"
   },
-  "license": "BSD-3-Clause（PoseBusters 本身）；本 App 的封装代码与文档随仓库以 MIT 发布，引用 PoseBusters 时须保留原引用",
+  "license": "MIT（PoseBusters 本身）；本 App 的封装代码与文档随仓库以 MIT 发布，引用 PoseBusters 时须保留原引用",
   "citation": [
     "Buttenschoen, M., Morris, G. M., Deane, C. M. PoseBusters: AI-based docking methods fail to generate physically valid poses or generalise to novel sequences. Chem. Sci. 15, 3130-3139 (2024). doi:10.1039/D3SC04185A"
   ],

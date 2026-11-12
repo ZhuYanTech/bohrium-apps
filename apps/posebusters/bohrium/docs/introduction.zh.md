@@ -12,5 +12,5 @@ PoseBusters 检查对接或结构预测产生的配体姿势是否满足化学�
 
 ## 开源仓库
 
-- [PoseBusters 上游实现（BSD-3-Clause）](https://github.com/maabuu/posebusters)
+- [PoseBusters 上游实现（MIT）](https://github.com/maabuu/posebusters)
 - [ZhuYanTech 玻尔封装（MIT）](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/posebusters)

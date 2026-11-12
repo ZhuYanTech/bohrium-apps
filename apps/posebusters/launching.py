@@ -15,7 +15,7 @@ main() 转调 run_posebusters.main()。
 - Buttenschoen, M., Morris, G. M., Deane, C. M. PoseBusters: AI-based docking
   methods fail to generate physically valid poses or generalise to novel sequences.
   Chem. Sci. 15, 3130-3139 (2024). doi:10.1039/D3SC04185A
-- PoseBusters 许可：BSD-3-Clause。
+- PoseBusters 许可：MIT。
 
 本文件不调用任何第三方 API、不含密钥；唯一的网络访问是 run_posebusters.py
 按用户给的 PDB 编号从 RCSB 下载蛋白结构。

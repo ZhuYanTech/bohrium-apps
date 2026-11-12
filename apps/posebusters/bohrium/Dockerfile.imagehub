@@ -5,7 +5,7 @@
 FROM python:3.13-slim
 
 LABEL org.opencontainers.image.title="PoseBusters 对接姿势质量检查（玻尔 App）"
-LABEL org.opencontainers.image.description="PoseBusters 0.6.5, BSD-3-Clause. Check docked/generated ligand poses for chemical and physical validity."
+LABEL org.opencontainers.image.description="PoseBusters 0.6.5, MIT. Check docked/generated ligand poses for chemical and physical validity."
 LABEL org.opencontainers.image.source="https://github.com/maabuu/posebusters"
 
 ENV PYTHONUNBUFFERED=1 \

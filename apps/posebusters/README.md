@@ -105,7 +105,7 @@ bash examples/test_run.sh
 
 ## 许可与引用
 
-- PoseBusters 本身：**BSD-3-Clause**。
+- PoseBusters 本身：**MIT**。
 - 本 App 的封装代码与文档：随仓库以 MIT 发布。
 - 引用：
   Buttenschoen, M., Morris, G. M., Deane, C. M.
