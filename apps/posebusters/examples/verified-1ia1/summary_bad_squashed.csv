@@ -1,0 +1,2 @@
+﻿序号,文件,分子,构象位置,检查项总数,通过项数,未通过项数,PB_valid,未通过项,未通过项_原始名
+1,/tmp/badposes/bad_squashed.sdf,BAD_SQUASHED_0.5X,0,28,24,4,否,键长合理；键角合理；分子内无原子碰撞；内部能量合理,bond_lengths;bond_angles;internal_steric_clash;internal_energy

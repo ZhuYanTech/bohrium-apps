@@ -1,0 +1,68 @@
+# PoseBusters 对接姿势质量检查（玻尔离线任务 App）
+# 构建方式：把本文件全文粘贴到玻尔镜像中心（Image Hub）的 Dockerfile 输入框。
+# 注意：本文件不含 COPY——构建时从公开仓库克隆封装脚本。
+# 纯 CPU，不需要 GPU。镜像约 1.5 GB（主要是 RDKit）。
+FROM python:3.13-slim
+
+LABEL org.opencontainers.image.title="PoseBusters 对接姿势质量检查（玻尔 App）"
+LABEL org.opencontainers.image.description="PoseBusters 0.6.5, BSD-3-Clause. Check docked/generated ligand poses for chemical and physical validity."
+LABEL org.opencontainers.image.source="https://github.com/maabuu/posebusters"
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+# 1) 系统依赖
+#    - libgomp1、libxrender1、libxext6：RDKit 运行时需要
+#    - 玻尔要求镜像装 SSH 相关组件（openssh-server / supervisor / net-tools），
+#      否则管理节点可能用不了；任务提交本身不受影响
+#    - git：下一步克隆封装脚本用
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+        libgomp1 libxrender1 libxext6 \
+        openssh-server supervisor net-tools \
+        curl git \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2) 从公开仓库取封装脚本
+RUN mkdir -p /app && \
+    git clone --depth 1 https://github.com/ZhuYanTech/bohrium-apps /tmp/bohrium-apps && \
+    cp /tmp/bohrium-apps/apps/posebusters/run_posebusters.py \
+       /tmp/bohrium-apps/apps/posebusters/launching.py \
+       /tmp/bohrium-apps/apps/posebusters/requirements-posebusters.txt \
+       /tmp/bohrium-apps/apps/posebusters/requirements-launching.txt /app/ && \
+    mkdir -p /app/examples && \
+    cp /tmp/bohrium-apps/apps/posebusters/examples/make_bad_poses.py \
+       /tmp/bohrium-apps/apps/posebusters/examples/test_run.sh /app/examples/ && \
+    chmod +x /app/run_posebusters.py /app/launching.py /app/examples/test_run.sh && \
+    rm -rf /tmp/bohrium-apps
+
+WORKDIR /app
+
+# 3) PoseBusters 与 RDKit（版本钉死，与本地验证一致）
+RUN pip install --no-cache-dir -r requirements-posebusters.txt
+
+# 4) DP-Launching 依赖（标准离线任务型 App 用）
+RUN pip install --no-cache-dir -r requirements-launching.txt
+
+# 5) 构建期自检：命令可用、自带基准结构 28 项全过
+RUN python3 -c "import importlib.metadata as m; print('posebusters', m.version('posebusters')); print('rdkit', m.version('rdkit'))" && \
+    which bust && \
+    python3 /app/run_posebusters.py --help >/dev/null && echo "run_posebusters.py OK" && \
+    DS=$(python3 -c "import posebusters,os;print(os.path.join(os.path.dirname(posebusters.__file__),'datasets','pdb'))") && \
+    python3 /app/run_posebusters.py \
+        --mol-pred "$DS/1ia1/1ia1_ligand.sdf" \
+        --mol-true "$DS/1ia1/1ia1_ligand.sdf" \
+        --protein "$DS/1ia1/1ia1_protein_one_lig_removed.pdb" \
+        --out-dir /tmp/selftest | grep "PB-valid 100.0%" && \
+    echo "构建期自检通过：1IA1 晶体配体 28 项全过" && \
+    rm -rf /tmp/selftest
+
+# 默认以非 root 运行
+RUN useradd -m -u 10001 pbuser && chown -R pbuser:pbuser /app
+USER pbuser
+
+ENTRYPOINT ["python3", "run_posebusters.py"]
+# 注意：ENTRYPOINT 是 CLI；玻尔标准离线任务的 EntryPoint 在建版本时
+# 另填镜像里的绝对路径 /app/launching.py（见 bohrium/bohrium-publish.md）。
+CMD ["--help"]

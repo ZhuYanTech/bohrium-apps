@@ -1,0 +1,111 @@
+{
+  "name": "posebusters-pose-validator",
+  "version": "1.0.0",
+  "developer": "ZhuYanTech",
+  "display_name_zh": "PoseBusters 对接姿势质量检查",
+  "display_name_en": "PoseBusters Docking Pose Validator",
+  "category": "药物发现 / 分子对接",
+  "description_zh": "对接或 AI 结构预测出来的配体姿势，到底站不站得住？上传姿势文件（可选蛋白、可选晶体配体），逐项检查化学有效性、分子内几何、与口袋的相容性、与晶体结构的吻合度，输出明细表 + 每个姿势一行的汇总 + 中文解读报告。开源 PoseBusters 0.6.5，纯 CPU，通常 1 分钟内完成。",
+  "description_en": "Check whether docked or AI-generated ligand poses are chemically and physically valid. Upload poses (optionally with protein and crystal ligand) and get a per-check table, a per-pose summary, and a Chinese report. PoseBusters 0.6.5, CPU-only.",
+  "long_description_en": "PoseBusters runs up to 28 checks on each ligand pose: chemical validity (sanitization, connectivity, radicals), consistency with a reference molecule (formula, bonds, stereochemistry, chirality), intramolecular geometry (bond lengths and angles, steric clash, ring flatness, internal energy), compatibility with the binding pocket (distances to and volume overlap with protein, cofactors and waters), and accuracy against a crystal pose (RMSD <= 2 A). Three modes are selected automatically from the inputs given: mol (poses only, 12 checks), dock (poses + protein, 22 checks), redock (poses + protein + crystal ligand, 28 checks).",
+  "compute": {
+    "engine": "Bohrium（用户自付算力）",
+    "resource": "CPU 即可，无需 GPU",
+    "typical_runtime": "< 1 分钟（单个姿势约 1-2 秒；几十个姿势通常不到 1 分钟）"
+  },
+  "inputs": [
+    {
+      "name": "mol_pred",
+      "type": "file",
+      "format": "SDF / MOL / MOL2 / PDB",
+      "label_zh": "待检查的配体姿势",
+      "description_zh": "对接或结构预测产生的配体姿势；一个文件里可放多个分子或多个构象，会逐个检查",
+      "required": true
+    },
+    {
+      "name": "protein_file",
+      "type": "file",
+      "format": "PDB / CIF",
+      "label_zh": "蛋白结构（可选）",
+      "description_zh": "给了就增加「与口袋的相容性」检查：原子碰撞、体积穿模、配体是否跑出口袋",
+      "required": false
+    },
+    {
+      "name": "pdb_id",
+      "type": "string",
+      "label_zh": "或输入蛋白的 PDB 编号（可选）",
+      "description_zh": "4 位编号，从 RCSB 下载；与上传蛋白文件二选一",
+      "example": "1IA1",
+      "pattern": "^[0-9][A-Za-z0-9]{3}$",
+      "required": false
+    },
+    {
+      "name": "mol_true",
+      "type": "file",
+      "format": "SDF",
+      "label_zh": "晶体参考配体（可选）",
+      "description_zh": "给了就增加「与参考一致」和「RMSD ≤ 2 Å」检查，用于回顾性评估对接准确度",
+      "required": false
+    },
+    {
+      "name": "strip_ligand",
+      "type": "string",
+      "label_zh": "从蛋白中删除的配体残基名（可选）",
+      "description_zh": "如 TQ3，多个用逗号分隔。蛋白里若还留着要对接的那个配体，它会和自己碰撞导致结果全错；留空时会尝试从姿势文件的分子名自动推断",
+      "example": "TQ3",
+      "required": false
+    },
+    {
+      "name": "full_report",
+      "type": "boolean",
+      "default": false,
+      "label_zh": "明细表附带具体数值",
+      "description_zh": "在 results.csv 里附上每项检查的具体数值，而不只是通过/未通过",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "summary.csv",
+      "type": "csv",
+      "label_zh": "姿势汇总表",
+      "description_zh": "每个姿势一行：是否 PB-valid、通过/未通过项数、未通过的检查项（中文）"
+    },
+    {
+      "name": "results.csv",
+      "type": "csv",
+      "label_zh": "检查明细表",
+      "description_zh": "每个姿势每项检查一列的原始结果表，可直接做批量统计"
+    },
+    {
+      "name": "report_zh.md",
+      "type": "markdown",
+      "label_zh": "中文解读报告",
+      "description_zh": "结论先行，附问题汇总（哪一项最常失败、什么原因、怎么处理）、逐个姿势明细、本次执行与未执行的检查项"
+    },
+    {
+      "name": "posebusters_raw",
+      "type": "directory",
+      "label_zh": "原始输出",
+      "description_zh": "PoseBusters 原始 CSV，以及下载/剥离配体后的蛋白结构，供复核"
+    }
+  ],
+  "notes_zh": [
+    "PoseBusters 判断姿势合不合理，不预测结合强度（Kd / ΔG），也不替代打分函数排序。",
+    "RMSD ≤ 2 Å 只在提供了晶体参考配体时才有意义；没有参考结构时，通过全部检查只说明姿势合理，不等于姿势正确。",
+    "蛋白结构里若还留着要对接的那个配体，它会和自己碰撞导致结果全错。本 App 会尝试自动识别并剥离，也可用「从蛋白中删除的配体残基名」手动指定。",
+    "与结晶水的碰撞/体积重叠两项：若对接时本就应置换该水分子，失败是预期之内的，可结合实际判断。",
+    "本 App 不调用任何第三方 API，不含密钥。"
+  ],
+  "tags": ["PoseBusters", "对接姿势验证", "分子对接", "结构预测质控", "PB-valid", "药物设计"],
+  "upstream": {
+    "project": "PoseBusters",
+    "homepage": "https://github.com/maabuu/posebusters",
+    "version_pinned": "posebusters==0.6.5, rdkit==2026.9.2"
+  },
+  "license": "BSD-3-Clause（PoseBusters 本身）；本 App 的封装代码与文档随仓库以 MIT 发布，引用 PoseBusters 时须保留原引用",
+  "citation": [
+    "Buttenschoen, M., Morris, G. M., Deane, C. M. PoseBusters: AI-based docking methods fail to generate physically valid poses or generalise to novel sequences. Chem. Sci. 15, 3130-3139 (2024). doi:10.1039/D3SC04185A"
+  ],
+  "documentation": "https://github.com/ZhuYanTech/bohrium-apps/blob/main/apps/posebusters/README.md"
+}

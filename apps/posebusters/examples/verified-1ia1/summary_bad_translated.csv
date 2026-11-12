@@ -1,0 +1,2 @@
+﻿序号,文件,分子,构象位置,检查项总数,通过项数,未通过项数,PB_valid,未通过项,未通过项_原始名
+1,/tmp/badposes/bad_translated.sdf,BAD_TRANSLATED_10A,0,28,25,3,否,与蛋白无原子碰撞；与蛋白体积重叠不超限；与晶体姿势 RMSD ≤ 2 Å,minimum_distance_to_protein;volume_overlap_with_protein;rmsd_≤_2å

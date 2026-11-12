@@ -13,12 +13,22 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
 
 ## 应用一览
 
-| 应用 | 说明 | 目录 |
-| --- | --- | --- |
-| **PLIP 蛋白-配体相互作用分析** | 上传蛋白-配体复合物 PDB（或填 PDB ID），输出相互作用清单（CSV）+ 中文报告。CPU 即可，单结构通常 5 分钟内完成。 | [`apps/plip/`](apps/plip/) |
+| 应用 | 说明 | 算力 | 目录 |
+| --- | --- | --- | --- |
+| **PLIP 蛋白-配体相互作用分析** | 上传蛋白-配体复合物 PDB（或填 PDB ID），输出相互作用清单（CSV）+ 中文报告。单结构通常 5 分钟内完成。 | CPU | [`apps/plip/`](apps/plip/) |
+| **PoseBusters 对接姿势质量检查** | 对接或 AI 预测出的配体姿势到底站不站得住：化学有效性、分子内几何、与口袋的相容性、与晶体结构的 RMSD，共 28 项检查，输出汇总表 + 中文报告。通常 1 分钟内完成。 | CPU | [`apps/posebusters/`](apps/posebusters/) |
+| **Boltz-2 共折叠与亲和力预测** | 输入蛋白序列 + 配体 SMILES，一次给出复合物结构和结合亲和力（结合概率、预测 log10(IC50)）。 | GPU | [`apps/boltz2/`](apps/boltz2/) |
+| **OpenFold3 结构预测** | 输入蛋白序列（可加配体、DNA、RNA），预测复合物三维结构，输出 CIF/PDB + 置信度 + 中文报告。 | GPU | [`apps/openfold3/`](apps/openfold3/) |
 
-1VSN：13 个相互作用（氢键 7、疏水 4、卤键 2）；3MXF 的目标配体 JQ1：14 个（含 ASN140 经典氢键）。
-详见 [`apps/plip/VERIFICATION.md`](apps/plip/VERIFICATION.md)。
+典型串法：`boltz2` / `openfold3` 出结构 → `posebusters` 把关姿势质量 →
+`plip` 分析通过筛选的姿势的相互作用。中间这一步能挡掉大量无效的后续计算。
+
+各应用的验证记录见各自目录下的 `VERIFICATION.md`：
+
+- PLIP：1VSN 13 个相互作用（氢键 7、疏水 4、卤键 2）；3MXF 的目标配体 JQ1 14 个（含 ASN140 经典氢键）。
+  见 [`apps/plip/VERIFICATION.md`](apps/plip/VERIFICATION.md)
+- PoseBusters：4 个晶体基准结构 28 项全过；两个人造缺陷姿势分别被对应分组精准抓出；
+  配体剥离逻辑与官方预处理文件等价。见 [`apps/posebusters/VERIFICATION.md`](apps/posebusters/VERIFICATION.md)
 
 ## 如何加一个新应用
 
@@ -38,13 +48,16 @@ ZhuYanTech 在深势科技玻尔（Bohrium）平台上发布的所有开源应�
 .
 ├── README.md          本文件
 ├── apps/
-│   └── plip/          PLIP 蛋白-配体相互作用分析
-│       ├── README.md
-│       ├── Dockerfile
-│       ├── run_plip.py
-│       ├── app_streamlit.py
-│       ├── examples/      验证脚本 + 1VSN / 3MXF 运行结果
-│       └── bohrium/       发布清单 + App 元数据
+│   ├── plip/          PLIP 蛋白-配体相互作用分析（CPU）
+│   ├── posebusters/   PoseBusters 对接姿势质量检查（CPU）
+│   │   ├── README.md
+│   │   ├── VERIFICATION.md
+│   │   ├── run_posebusters.py   计算入口（CLI）
+│   │   ├── launching.py         玻尔离线任务入口
+│   │   ├── examples/            一键验证脚本 + 已验证产物
+│   │   └── bohrium/             Dockerfile.imagehub + app.json + 发布清单
+│   ├── boltz2/        Boltz-2 共折叠与亲和力预测（GPU）
+│   └── openfold3/     OpenFold3 结构预测（GPU）
 └── (未来：apps/<下一个应用>/)
 ```
 
@@ -69,11 +82,17 @@ Repository: https://github.com/ZhuYanTech/bohrium-apps
 
 ## Apps
 
-| App | Description | Directory |
-| --- | --- | --- |
-| **PLIP protein-ligand interaction profiler** | Upload a protein-ligand complex PDB (or enter a PDB ID) and get an interaction list (CSV) + a Chinese report. CPU-only, usually under 5 minutes per structure. | [`apps/plip/`](apps/plip/) |
+| App | Description | Compute | Directory |
+| --- | --- | --- | --- |
+| **PLIP protein-ligand interaction profiler** | Upload a protein-ligand complex PDB (or enter a PDB ID) and get an interaction list (CSV) + a Chinese report. | CPU | [`apps/plip/`](apps/plip/) |
+| **PoseBusters docking pose validator** | Check whether docked or AI-generated ligand poses are chemically and physically valid: up to 28 checks covering chemical validity, intramolecular geometry, pocket compatibility and RMSD to a crystal pose. | CPU | [`apps/posebusters/`](apps/posebusters/) |
+| **Boltz-2 co-folding and affinity** | Protein sequence + ligand SMILES in, complex structure and binding affinity out. | GPU | [`apps/boltz2/`](apps/boltz2/) |
+| **OpenFold3 structure prediction** | Protein sequence (optionally with ligands, DNA, RNA) in, complex structure + confidence + Chinese report out. | GPU | [`apps/openfold3/`](apps/openfold3/) |
 
-Verified: 1VSN gives 13 interactions (7 H-bonds, 4 hydrophobic, 2 halogen); for 3MXF the target ligand JQ1 gives 14 (including the classic ASN140 H-bond). See [`apps/plip/VERIFICATION.md`](apps/plip/VERIFICATION.md).
+Typical chain: `boltz2` / `openfold3` produce structures, `posebusters` filters out
+implausible poses, `plip` profiles the interactions of what survives.
+
+Verification records live in each app's own `VERIFICATION.md`.
 
 ## Adding a new app
 

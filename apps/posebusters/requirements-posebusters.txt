@@ -1,0 +1,5 @@
+# PoseBusters 运行时依赖（Dockerfile 用；与 2026-11-12 本地实测版本一致）
+posebusters==0.6.5
+rdkit==2026.9.2
+numpy==2.5.3
+pandas==3.0.5

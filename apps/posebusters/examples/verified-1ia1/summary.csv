@@ -1,0 +1,2 @@
+﻿序号,文件,分子,构象位置,检查项总数,通过项数,未通过项数,PB_valid,未通过项,未通过项_原始名
+1,/usr/local/lib/python3.13/dist-packages/posebusters/datasets/pdb/1ia1/1ia1_ligand.sdf,TQ3,0,28,28,0,是,,
