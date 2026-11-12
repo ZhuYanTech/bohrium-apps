@@ -1,0 +1,20 @@
+{
+  "name": "sasa-calculator",
+  "version": "1.0.0",
+  "display_name_zh": "溶剂可及表面积计算",
+  "display_name_en": "Solvent Accessible Surface Area",
+  "description_zh": "按 Shrake–Rupley 算法计算逐残基、链和结构的溶剂可及表面积。",
+  "description_en": "Calculate residue, chain, and structure solvent accessible surface areas with Shrake–Rupley.",
+  "tags": [
+    "protein",
+    "structure",
+    "analysis"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "summary.csv",
+  "smoke_arguments": [
+    "--structure",
+    "examples/ubiquitin.pdb"
+  ]
+}

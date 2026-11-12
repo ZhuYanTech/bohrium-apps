@@ -1,0 +1,20 @@
+{
+  "name": "ramachandran-plot",
+  "version": "1.0.0",
+  "display_name_zh": "蛋白质拉氏图",
+  "display_name_en": "Ramachandran Plot",
+  "description_zh": "按六类参考分布绘制蛋白骨架角度图，输出逐残基分类。",
+  "description_en": "Plot protein backbone dihedrals and classify each residue against six reference distributions.",
+  "tags": [
+    "protein",
+    "structure",
+    "validation"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "ramachandran.csv",
+  "smoke_arguments": [
+    "--structure",
+    "examples/ubiquitin.pdb"
+  ]
+}

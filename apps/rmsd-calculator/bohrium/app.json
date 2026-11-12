@@ -1,0 +1,22 @@
+{
+  "name": "rmsd-calculator",
+  "version": "1.0.0",
+  "display_name_zh": "蛋白结构 RMSD 计算",
+  "display_name_en": "Protein Structure RMSD Calculator",
+  "description_zh": "计算结构或链的原子 RMSD，支持刚体拟合、区间和质量加权。",
+  "description_en": "Measure atom RMSD by structure or chain with rigid fitting, residue ranges, and mass weighting.",
+  "tags": [
+    "protein",
+    "structure",
+    "RMSD"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "rmsd.csv",
+  "smoke_arguments": [
+    "--reference",
+    "examples/ubiquitin.pdb",
+    "--comparison",
+    "examples/ubiquitin.pdb"
+  ]
+}

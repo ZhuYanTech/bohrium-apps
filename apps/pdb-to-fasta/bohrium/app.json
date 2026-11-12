@@ -1,0 +1,20 @@
+{
+  "name": "pdb-to-fasta",
+  "version": "1.0.0",
+  "display_name_zh": "PDB 转 FASTA",
+  "display_name_en": "PDB to FASTA Converter",
+  "description_zh": "从 PDB 坐标或 SEQRES 记录提取各链序列并导出 FASTA。",
+  "description_en": "Extract chain sequences from PDB coordinates or SEQRES records into FASTA.",
+  "tags": [
+    "protein",
+    "PDB",
+    "FASTA"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "sequences.fasta",
+  "smoke_arguments": [
+    "--structure",
+    "examples/ubiquitin.pdb"
+  ]
+}

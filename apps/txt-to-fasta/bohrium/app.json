@@ -1,0 +1,20 @@
+{
+  "name": "txt-to-fasta",
+  "version": "1.0.0",
+  "display_name_zh": "文本转 FASTA",
+  "display_name_en": "Text to FASTA Converter",
+  "description_zh": "整理纯文本中的序列、编号和标题，导出标准 FASTA。",
+  "description_en": "Clean plain-text sequence records and export FASTA.",
+  "tags": [
+    "sequence",
+    "FASTA",
+    "conversion"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "sequences.fasta",
+  "smoke_arguments": [
+    "--sequence",
+    "1 mkt ayia"
+  ]
+}

@@ -1,0 +1,14 @@
+# 蛋白质拉氏图
+
+上传 PDB、ENT 或 mmCIF，或填写四位 PDB 编号。只分析第一个模型中具备完整、相连主链的残基。输出拉氏图 PNG 及逐残基 CSV。参考表使用 2° 网格，靠近边界时分类可能不同于插值方法。可用 1UBQ 验证，预期至少有 70 个可测残基，φ 和 ψ 在 −180° 至 180°。
+
+使用 Docker 验证样例。
+
+```sh
+docker build --platform linux/amd64 -t ramachandran-plot:1.0.0 .
+docker run --rm --platform linux/amd64 ramachandran-plot:1.0.0 bash examples/test_run.sh
+```
+
+[中文帮助](bohrium/docs/help.zh.md) · [English guide](bohrium/docs/help.en.md)
+
+[开源实现](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/ramachandran-plot) · [上游开源仓库](https://github.com/rlabduke/rotarama_data)

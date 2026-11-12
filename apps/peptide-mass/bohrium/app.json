@@ -1,0 +1,20 @@
+{
+  "name": "peptide-mass",
+  "version": "1.0.0",
+  "display_name_zh": "酶切肽段质量计算",
+  "display_name_en": "Peptide Digest Mass Calculator",
+  "description_zh": "按酶切规则计算肽段位置、质量和离子质荷比。",
+  "description_en": "Calculate peptide positions, masses, and ion m/z from in-silico digestion.",
+  "tags": [
+    "protein",
+    "Peptide",
+    "Mass spectrometry"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "peptides.csv",
+  "smoke_arguments": [
+    "--sequence",
+    "AKR"
+  ]
+}

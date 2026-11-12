@@ -1,0 +1,22 @@
+{
+  "name": "hydropathy-plot",
+  "version": "1.0.0",
+  "display_name_zh": "蛋白质亲疏水性曲线",
+  "display_name_en": "Protein Hydropathy Plot",
+  "description_zh": "计算 Kyte–Doolittle 滑动窗口分数并绘制亲疏水性曲线。",
+  "description_en": "Calculate sliding-window Kyte–Doolittle scores and plot protein hydropathy.",
+  "tags": [
+    "protein",
+    "sequence",
+    "visualization"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "hydropathy.csv",
+  "smoke_arguments": [
+    "--sequence",
+    "MKTAYIAKQR",
+    "--window",
+    "5"
+  ]
+}

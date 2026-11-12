@@ -1,0 +1,20 @@
+{
+  "name": "three-to-one",
+  "version": "1.0.0",
+  "display_name_zh": "氨基酸三字母转单字母",
+  "display_name_en": "Three-to-One Amino Acid Converter",
+  "description_zh": "将三字母氨基酸代码转成单字母，支持多条 FASTA 和未知残基策略。",
+  "description_en": "Convert three-letter amino acid codes to one-letter codes with FASTA and unknown-residue options.",
+  "tags": [
+    "protein",
+    "sequence",
+    "conversion"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "converted.txt",
+  "smoke_arguments": [
+    "--sequence",
+    "Cys-Tyr-Ile-Gln-Asn-Cys-Pro-Leu-Gly"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "open-babel",
+  "version": "1.0.0",
+  "display_name_zh": "Open Babel 分子格式转换",
+  "display_name_en": "Open Babel Molecular Converter",
+  "description_zh": "转换分子文件，可设置坐标、氢原子、pH、电荷和力场。",
+  "description_en": "Convert molecule files with coordinate, hydrogen, pH, charge, and force-field options.",
+  "tags": [
+    "chemistry",
+    "Open Babel",
+    "conversion"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "converted.mol",
+  "smoke_arguments": [
+    "--molecule_text",
+    "CCO"
+  ]
+}

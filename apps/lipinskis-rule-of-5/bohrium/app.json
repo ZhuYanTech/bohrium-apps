@@ -1,0 +1,20 @@
+{
+  "name": "lipinskis-rule-of-5",
+  "version": "1.0.0",
+  "display_name_zh": "Lipinski 五规则",
+  "display_name_en": "Lipinski Rule of Five",
+  "description_zh": "计算分子量、LogP、氢键供受体数及 Lipinski 规则偏离数。",
+  "description_en": "Compute molecular weight, LogP, hydrogen-bond counts, and Lipinski rule violations.",
+  "tags": [
+    "chemistry",
+    "RDKit",
+    "drug"
+  ],
+  "entrypoint": "/app/launching.py",
+  "python_interpreter": "/usr/local/bin/python3",
+  "primary_output": "lipinski.csv",
+  "smoke_arguments": [
+    "--smiles",
+    "CC(=O)Oc1ccccc1C(=O)O"
+  ]
+}
