@@ -1,5 +1,7 @@
 # PoseBusters 玻尔部署
 
+兼容性更新版使用独立镜像和 App 版本 `1.1.0`。部署时将示例标签替换为当前版本。
+
 开发者镜像仓库为 `zhuyan-xlab/posebusters`，App 标识为 `posebusters-pose-validator`。标准离线任务使用 CPU。应用元数据见 [app.json](app.json)，镜像与 App 的双语介绍及帮助见 [docs/](docs/)。
 
 ## 构建与推送

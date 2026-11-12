@@ -11,10 +11,11 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 WORKDIR /app
 COPY requirements-posebusters.txt requirements-launching.txt ./
 RUN python -m pip install -r requirements-posebusters.txt -r requirements-launching.txt
-COPY run_posebusters.py launching.py ./
-COPY examples/make_bad_poses.py examples/test_run.sh ./examples/
+COPY run_posebusters.py launching.py batch_inputs.py ./
+COPY examples/make_bad_poses.py examples/test_run.sh examples/test_summary.py ./examples/
 
 RUN set -eu; \
+    PYTHONPATH=/app python /app/examples/test_summary.py; \
     dataset="$(python -c 'import pathlib, posebusters; print(pathlib.Path(posebusters.__file__).parent / "datasets/pdb/1ia1")')"; \
     python /app/launching.py --mol_pred "$dataset/1ia1_ligand.sdf" \
       --mol_true "$dataset/1ia1_ligand.sdf" \

@@ -24,6 +24,8 @@ from __future__ import annotations
 
 import csv
 import sys
+from tempfile import TemporaryDirectory
+from typing import Literal
 from pathlib import Path
 from typing import Optional
 
@@ -38,13 +40,15 @@ from dp.launching.typing import (
     OutputDirectory,
 )
 
-import run_posebusters  # noqa: E402  （在 sys.path 调整之后导入）
+import run_posebusters
+from batch_inputs import load_bundle
 
 
 class PoseBustersOptions(BaseModel):
     """PoseBusters 任务的输入声明；Launching 据此生成用户填表界面。"""
 
-    mol_pred: InputFilePath = Field(
+    mol_pred: Optional[InputFilePath] = Field(
+        default=None,
         title="待检查的配体姿势",
         description="对接或结构预测产生的配体姿势文件（SDF/MOL/MOL2/PDB）。"
                     "一个文件里可以放多个分子或多个构象，会逐个检查",
@@ -53,9 +57,9 @@ class PoseBustersOptions(BaseModel):
     protein_file: Optional[InputFilePath] = Field(
         default=None,
         title="蛋白结构（可选）",
-        description="受体蛋白结构（PDB）。给了就增加「与口袋的相容性」检查："
+        description="受体结构（PDB/SDF/MOL/MOL2）。给了就增加「与口袋的相容性」检查："
                     "原子碰撞、体积穿模、配体是否跑出口袋",
-        ftypes=["pdb"],
+        ftypes=["pdb", "sdf", "mol", "mol2"],
     )
     pdb_id: Optional[str] = Field(
         default="",
@@ -66,15 +70,15 @@ class PoseBustersOptions(BaseModel):
     mol_true: Optional[InputFilePath] = Field(
         default=None,
         title="晶体参考配体（可选）",
-        description="已知的晶体配体姿势（SDF）。给了就增加「与参考一致」和"
+        description="已知的晶体配体姿势（SDF/MOL/MOL2/PDB）。给了就增加「与参考一致」和"
                     "「RMSD ≤ 2 Å」检查，用于回顾性评估对接准确度",
-        ftypes=["sdf", "mol"],
+        ftypes=["sdf", "mol", "mol2", "pdb"],
     )
     strip_ligand: Optional[str] = Field(
         default="",
         title="从蛋白中删除的配体残基名（可选）",
         description="如 TQ3，多个用逗号分隔。蛋白结构里若还留着要对接的那个配体，"
-                    "它会和自己碰撞导致结果全错。留空时会尝试从姿势文件的分子名自动推断",
+                    "它会和自己碰撞导致结果全错。只对 PDB 生效，默认保留受体原样",
         max_length=64,
     )
     full_report: bool = Field(
@@ -82,6 +86,17 @@ class PoseBustersOptions(BaseModel):
         title="明细表附带具体数值",
         description="在 results.csv 里附上每项检查的具体数值，而不只是通过/未通过",
     )
+    bundle: Optional[InputFilePath] = Field(default=None, title="批量输入 ZIP", ftypes=["zip"],
+        description="mol_pred/ 必填，mol_true/ 和 mol_cond/ 可选。组内按 ZIP 文件顺序编号，可包含 pairs.csv。")
+    pairing: str = Field(default="", title="粘贴 CSV 配对表",
+        description="仅用于批量 ZIP，列为 mol_pred、mol_true、mol_cond，编号从 1 开始。")
+    validation_mode: Literal["auto", "mol", "dock", "redock", "regen", "gen",
+                             "mol_fast", "dock_fast", "redock_fast", "regen_fast", "gen_fast", "custom"] = Field(
+        default="auto", title="验证模式")
+    output_format: Literal["short", "long", "csv"] = Field(default="short", title="原生报告格式")
+    top_n: Optional[int] = Field(default=None, ge=1, title="每个预测文件最多检查前 N 个姿势")
+    config_json: Optional[InputFilePath] = Field(default=None, title="自定义 JSON 配置", ftypes=["json"])
+    auto_strip: bool = Field(default=False, title="自动识别并移除 PDB 中的同名配体")
     output_dir: OutputDirectory = Field(
         default="./output",
         title="输出目录",
@@ -125,34 +140,56 @@ def _write_launching_report(out_dir: Path, total: int, valid: int) -> None:
 
 
 def main(opts: PoseBustersOptions) -> int:
+    out_dir = Path(_resolve_path(opts.output_dir, "./output"))
     mol_pred = _resolve_path(opts.mol_pred)
-    if not mol_pred:
-        raise ValueError("请上传待检查的配体姿势文件。")
-
-    out_dir = _resolve_path(opts.output_dir, "./output")
-    argv: list[str] = ["--mol-pred", mol_pred, "--out-dir", out_dir]
+    bundle = _resolve_path(opts.bundle)
+    if bool(mol_pred) == bool(bundle):
+        raise ValueError("请在单个待检查姿势文件和批量 ZIP 中选择一个。")
+    if opts.pairing.strip() and not bundle:
+        raise ValueError("CSV 配对表仅用于批量 ZIP。")
 
     protein = _resolve_path(opts.protein_file)
+    reference = _resolve_path(opts.mol_true)
     pdb_id = (opts.pdb_id or "").strip()
-    if protein:
-        argv += ["--protein", protein]
-        if pdb_id:
-            print("提示：同时提供了蛋白文件和 PDB 编号，优先使用上传的文件。")
-    elif pdb_id:
-        argv += ["--pdb-id", pdb_id.upper()]
-
-    mol_true = _resolve_path(opts.mol_true)
-    if mol_true:
-        argv += ["--mol-true", mol_true]
-
-    if (opts.strip_ligand or "").strip():
-        argv += ["--strip-ligand", opts.strip_ligand.strip()]
+    if bundle and (protein or reference or pdb_id):
+        raise ValueError("使用 ZIP 时，请将参考和受体放入压缩包。")
+    common = ["--validation-mode", opts.validation_mode, "--output-format", opts.output_format]
+    for flag, value in (
+        ("--config-json", _resolve_path(opts.config_json)),
+        ("--top-n", opts.top_n),
+        ("--strip-ligand", (opts.strip_ligand or "").strip()),
+    ):
+        if value:
+            common += [flag, str(value)]
     if opts.full_report:
-        argv += ["--full-report"]
+        common.append("--full-report")
+    if not opts.auto_strip and not opts.strip_ligand:
+        common.append("--no-auto-strip")
 
-    code = run_posebusters.main(argv)
-    if code != 0:
-        raise RuntimeError(f"PoseBusters 检查失败，run_posebusters.main 返回退出码 {code}。")
+    if bundle:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        batch_rows = []
+        with TemporaryDirectory() as temporary:
+            pairs = load_bundle(Path(bundle), Path(temporary), opts.pairing)
+            for index, pair in enumerate(pairs, 1):
+                dest = out_dir / f"pair_{index:03d}"
+                argv = common + ["--out-dir", str(dest)]
+                for field, flag in (("mol_pred", "--mol-pred"), ("mol_true", "--mol-true"), ("mol_cond", "--protein")):
+                    if field in pair:
+                        argv += [flag, str(pair[field])]
+                run_posebusters.main(argv)
+                with (dest / "summary.csv").open(encoding="utf-8-sig") as handle:
+                    batch_rows.extend({"配对编号": index, **row} for row in csv.DictReader(handle))
+        with (out_dir / "summary.csv").open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=list(batch_rows[0]))
+            writer.writeheader()
+            writer.writerows(batch_rows)
+    else:
+        argv = common + ["--mol-pred", mol_pred, "--out-dir", str(out_dir)]
+        for flag, value in (("--protein", protein), ("--pdb-id", pdb_id), ("--mol-true", reference)):
+            if value:
+                argv += [flag, value]
+        run_posebusters.main(argv)
 
     # 成功后可选写 Launching 报告（失败不阻断）
     try:
@@ -175,7 +212,7 @@ def to_parser():
     return to_runner(
         PoseBustersOptions,
         main,
-        version="1.0.0",
+        version="1.1.0",
         exception_handler=default_minimal_exception_handler,
     )
 

@@ -11,6 +11,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 WORKDIR /app
 COPY requirements-launching.txt ./
 RUN python -m pip install -r requirements-launching.txt
+# The PDB residue dictionary is pure Python and does not import NumPy.
+RUN python -m pip install --no-deps biopython==1.85
 COPY run_aliphatic_index.py launching.py ./
 COPY examples/ ./examples/
-RUN chmod +x /app/launching.py && bash examples/test_run.sh && python launching.py --help
+RUN chmod +x /app/launching.py && bash examples/test_run.sh && PYTHONPATH=/app python examples/test_inputs.py && python launching.py --help

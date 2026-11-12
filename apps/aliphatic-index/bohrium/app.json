@@ -1,16 +1,48 @@
 {
   "name": "protein-aliphatic-index",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "developer": "ZhuYanTech",
   "display_name_zh": "蛋白质脂肪族指数",
   "display_name_en": "Protein Aliphatic Index",
-  "description_zh": "批量计算蛋白质序列的 Ikai 脂肪族指数。上传 FASTA 文件，下载每条序列的长度、脂肪族残基计数和指数 CSV。",
-  "description_en": "Calculate the Ikai aliphatic index for protein sequences in a FASTA file. Download sequence lengths, aliphatic residue counts and indices as CSV.",
+  "description_zh": "从序列、FASTA/TXT/CSV/PDB 文件或结构编号批量计算 Ikai 脂肪族指数。",
+  "description_en": "Calculate the Ikai aliphatic index from pasted sequences, FASTA/TXT/CSV/PDB files, or a structure ID.",
   "type": "标准离线任务",
   "entrypoint": "/app/launching.py",
-  "inputs": [{"name": "fasta", "type": "file", "required": true, "extensions": ["fasta", "fa", "faa", "txt"]}],
-  "outputs": [{"name": "aliphatic_index.csv", "type": "csv"}],
-  "tool_reference": "https://proteiniq.io/app/aliphatic-index",
-  "formula_reference": "https://web.expasy.org/protparam/protparam-doc.html",
-  "license": "MIT"
+  "inputs": [
+    {
+      "name": "fasta",
+      "type": "file",
+      "extensions": [
+        "fasta",
+        "fa",
+        "fas",
+        "faa",
+        "txt",
+        "csv",
+        "pdb"
+      ]
+    },
+    {
+      "name": "sequence",
+      "type": "string"
+    },
+    {
+      "name": "pdb_id",
+      "type": "string",
+      "max_length": 4
+    }
+  ],
+  "outputs": [
+    {
+      "name": "aliphatic_index.csv",
+      "type": "csv"
+    },
+    {
+      "name": "results.csv",
+      "type": "csv"
+    }
+  ],
+  "license": "MIT",
+  "input_rule": "Choose exactly one input.",
+  "source": "https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/aliphatic-index"
 }

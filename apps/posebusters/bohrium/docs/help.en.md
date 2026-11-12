@@ -1,20 +1,17 @@
-## Prepare the inputs
+## Choose single-file or batch input
 
-- **Predicted pose (required):** Upload SDF, MOL, MOL2, or PDB. For several poses sharing a receptor, use a multi-record SDF file.
-- **Receptor (optional):** Upload PDB or enter a four-character PDB ID. Convert CIF or ENT to PDB before uploading. An uploaded receptor takes precedence.
-- **Crystal reference (optional):** Upload SDF or MOL. Full redock checks also require a receptor. With a reference but no receptor, 18 checks run and pocket compatibility checks are skipped.
-- **Ligand residue names to remove (optional):** Enter comma-separated residue names. A copy of the evaluated ligand in the receptor can cause self-overlap. Keep waters and cofactors for the corresponding checks.
+- **Single-file run**: A predicted pose is required. Predicted poses, crystal references, and receptors accept SDF, MOL, MOL2, or PDB. For a receptor, you can also enter a four-character PDB ID. An uploaded receptor takes precedence.
+- **Batch run**: Upload a ZIP containing `mol_pred/` and optional `mol_true/` and `mol_cond/` folders. Index files from 1 in ZIP entry order within each group. One reference and one receptor can be shared across all poses. To pair inputs per row, include `pairs.csv` at the ZIP root or paste CSV into the form. Use `mol_pred,mol_true,mol_cond` as column names. Reference and receptor cells can be blank.
+- Receptors are kept as supplied by default. Removing a named PDB ligand or enabling automatic removal can change pocket compatibility results.
 
-## Run the calculation and read the output
+## Validation modes and outputs
 
-Upload the files, select a CPU machine, and submit. Enable the full report option when you need numeric diagnostics. The diagnostics are included in the detailed CSV, and the summary uses the same set of validation checks.
+Select a mode automatically or choose mol, dock, redock, regen, gen, or their fast variants. Custom mode requires a complete JSON configuration with `modules`. Top N applies per predicted file. A `top_n` setting in the custom configuration takes precedence.
 
-- `summary.csv`: Pass counts, failed checks, and overall PoseBusters validity (PB-valid) for each pose.
-- `results.csv`: Detailed results by check.
-- `report_zh.md`: Chinese report. `posebusters_raw/` contains raw results and receptor files generated during the run.
+Choose Short, Long, or CSV for the native report. Every run retains `results.csv`, `summary.csv`, `report_zh.md`, and metadata for the software version and resolved mode. Batch runs also have per-pair folders. Full report adds diagnostics to CSV. The summary counts passed, failed, and unevaluated checks separately. PB-valid requires every expected check to pass.
 
-## Reproduce the benchmark
+## Verification example
 
-Use the bundled PoseBusters 1IA1 benchmark. Supply the crystal ligand as both the predicted pose and the reference, together with the receptor file from which that ligand was removed. This positive control should pass all **28** redock checks. The RMSD ≤ 2 Å criterion applies to comparisons with a reference pose.
+Use the bundled 1IA1 crystal ligand as both the prediction and reference, with the receptor file from which that ligand was removed. The redock positive control should pass **28/28** checks. RMSD thresholds apply to comparisons against a reference pose.
 
-[Open-source implementation, examples, and deployment guide](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/posebusters)
+[Upstream open-source repository](https://github.com/maabuu/posebusters) · [Bohrium wrapper and deployment](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/posebusters)

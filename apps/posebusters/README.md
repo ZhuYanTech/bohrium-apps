@@ -31,21 +31,21 @@ D 与口袋的相容性、E 与晶体结构的吻合度。报告里每一项都�
 
 | | 内容 |
 | --- | --- |
-| 输入 | **待检查的配体姿势**（SDF/MOL/MOL2/PDB，必填，可含多个分子或构象）；**蛋白结构**（PDB，可选）或 **PDB 编号**（4 位，自动从 RCSB 下载）；**晶体参考配体**（SDF，可选）；**从蛋白中删除的配体残基名**（可选，留空自动推断） |
+| 输入 | **待检查的配体姿势**（SDF/MOL/MOL2/PDB，必填，可含多个分子或构象）；**受体**（PDB/SDF/MOL/MOL2，可选）或 **PDB 编号**（4 位，自动从 RCSB 下载）；**晶体参考配体**（SDF/MOL/MOL2/PDB，可选）；**从蛋白中删除的配体残基名**（PDB 可选，玻尔表单默认保留原受体） |
 | 输出 | `summary.csv`（每个姿势一行：是否 PB-valid、通过/未通过项数、未通过项中文名）、`results.csv`（每项检查一列的明细）、`report_zh.md`（中文报告）、`posebusters_raw/`（原始 CSV + 下载/剥离后的蛋白结构） |
 
-## 一个容易踩的坑：蛋白里还留着目标配体
+## 批量配对与高级设置
+
+玻尔表单支持预测、参考和受体三组文件的 ZIP 输入。按每组在 ZIP 中的条目顺序进行 1-based 编号。将配对表放在根目录 `pairs.csv`，或粘贴到配对字段。表头为 `mol_pred,mol_true,mol_cond`，后两列可选。批量结果包含逐配对目录及根目录汇总。详见[中英文帮助](bohrium/docs/)。
+
+可切换自动、预设、快速或自定义配置，指定每个输入的前 N 个姿势和原生报告格式。详细输出增加诊断列。汇总把通过、失败及未评估分开，任一预期检查为空时，该项不计入通过数。
+
+## 受体保留了待检查的配体
 
 如果蛋白结构里还留着你要对接的那个配体，预测姿势就会和**它自己**碰撞，
 结果是所有口袋相容性检查全部失败——看起来像姿势很差，其实是输入没准备好。
 
-本 App 会自动处理：
-- 用 `--pdb-id` 下载的结构，会从姿势文件的分子名推断目标配体残基名并剥离；
-- 也可以用 `--strip-ligand TQ3` 手动指定（多个用逗号分隔）；
-- **只删目标配体，保留水和辅因子**——PoseBusters 要用它们做碰撞检查。
-
-剥离后的结果与 PoseBusters 官方预处理文件（`*_protein_one_lig_removed.pdb`）
-完全一致，见 `VERIFICATION.md`。
+玻尔表单默认保留输入受体，可显式填写待移除残基名或启用自动推断。旧版命令行保持原默认，使用 `--no-auto-strip` 保留受体原样。移除只适用于 PDB，并按残基名操作。
 
 ## 本地运行（不用玻尔账号也能试）
 
@@ -107,11 +107,7 @@ bash examples/test_run.sh
 
 - PoseBusters 本身：**MIT**。
 - 本 App 的封装代码与文档：随仓库以 MIT 发布。
-- 引用：
-  Buttenschoen, M., Morris, G. M., Deane, C. M.
-  *PoseBusters: AI-based docking methods fail to generate physically valid poses
-  or generalise to novel sequences.* Chem. Sci. **15**, 3130-3139 (2024).
-  doi:[10.1039/D3SC04185A](https://doi.org/10.1039/D3SC04185A)
+- [PoseBusters 上游开源仓库](https://github.com/maabuu/posebusters)
+- [玻尔封装开源仓库](https://github.com/ZhuYanTech/bohrium-apps/tree/main/apps/posebusters)
 
-本 App 不调用任何第三方 API，不含任何密钥。
-唯一的网络访问是按用户给的 PDB 编号从 RCSB 下载蛋白结构。
+按 PDB 编号查询时需要访问 RCSB。

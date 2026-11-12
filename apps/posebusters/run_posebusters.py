@@ -11,7 +11,7 @@ run_posebusters.py — PoseBusters 对接姿势质量检查（玻尔 App 的计�
   dock   预测姿势 + 蛋白结构        —— 再查与口袋的相容性（碰撞、体积重叠、是否跑飞）
   redock 预测姿势 + 蛋白 + 晶体配体 —— 再查与参考的一致性和 RMSD ≤ 2 Å
 
-PoseBusters 许可：BSD-3-Clause。本脚本不调用任何第三方 API、不含密钥；
+PoseBusters 许可：MIT。本脚本不调用任何第三方 API、不含密钥；
 唯一的网络访问是按用户给的 PDB 编号从 RCSB 下载蛋白结构。
 
 引用：
@@ -23,12 +23,18 @@ from __future__ import annotations
 
 import argparse
 import csv
+from importlib.resources import files
+import json
 import shutil
 import subprocess
 import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
+
+PRESETS = {"mol", "dock", "redock", "regen", "gen", "mol_fast", "dock_fast",
+           "redock_fast", "regen_fast", "gen_fast"}
+FORMATS = {"short", "long", "csv"}
 
 RCSB_URL = "https://files.rcsb.org/download/{pdb_id}.pdb"
 
@@ -185,15 +191,18 @@ def strip_ligands_from_pdb(pdb_path: Path, resnames: list[str], out_path: Path) 
 
 
 def run_bust(mol_pred: Path, mol_true: Path | None, mol_cond: Path | None,
-             out_csv: Path, full_report: bool) -> None:
+             out_csv: Path, full_report: bool, *, config: Path,
+             top_n: int | None, outfmt: str = "csv") -> None:
     """调用 PoseBusters 的 bust 命令，结果写成 CSV。"""
     cmd = ["bust", str(mol_pred)]
     if mol_true is not None:
         cmd += ["-l", str(mol_true)]
     if mol_cond is not None:
         cmd += ["-p", str(mol_cond)]
-    cmd += ["--outfmt", "csv"]
-    if full_report:
+    cmd += ["--outfmt", outfmt, "--config", str(config)]
+    if top_n is not None:
+        cmd += ["--top-n", str(top_n)]
+    if full_report and outfmt != "short":
         cmd += ["--full-report"]
     log("运行：" + " ".join(cmd))
     proc = subprocess.run(cmd, capture_output=True, text=True)
@@ -202,7 +211,8 @@ def run_bust(mol_pred: Path, mol_true: Path | None, mol_cond: Path | None,
         sys.stderr.write(proc.stderr)
         raise SystemExit(f"PoseBusters 运行失败（退出码 {proc.returncode}）。上面是它的输出。")
     if not proc.stdout.strip():
-        raise SystemExit("PoseBusters 没有产生任何结果。确认输入文件里确实有分子。")
+        sys.stderr.write(proc.stderr)
+        raise SystemExit("PoseBusters 没有产生任何结果。请检查输入与验证模式。")
     out_csv.write_text(proc.stdout, encoding="utf-8")
     if proc.stderr.strip():
         log("PoseBusters 提示：\n" + proc.stderr.strip())
@@ -217,28 +227,34 @@ def as_bool(value: str) -> bool | None:
     return None  # 该模式下未执行这项检查
 
 
-def summarize(rows: list[dict], mode: str) -> tuple[list[dict], list[str]]:
+def summarize(rows: list[dict], mode: str, expected: set[str] | None = None) -> tuple[list[dict], list[str]]:
     """把明细表压成每个姿势一行；同时返回本次实际执行了哪些检查项。"""
     if not rows:
         raise SystemExit("结果表是空的。")
     # 完整明细还包含数值和中间布尔结果，仅汇总预设的正式检查项。
-    check_cols = [c for c in rows[0] if c in CHECKS]
+    check_cols = [c for c in rows[0] if c in (CHECKS if expected is None else expected)]
     # 本次实际跑了的检查项：至少有一行给出了 True/False
     active = [c for c in check_cols
               if any(as_bool(r.get(c, "")) is not None for r in rows)]
 
     summary = []
     for idx, row in enumerate(rows, start=1):
-        failed = [c for c in active if as_bool(row.get(c, "")) is False]
+        states = {c: as_bool(row.get(c, "")) for c in check_cols}
+        passed = sum(value is True for value in states.values())
+        failed = [c for c, value in states.items() if value is False]
+        unknown = [c for c, value in states.items() if value is None]
+        status = "否" if failed else ("未评估" if unknown or not passed else "是")
         summary.append({
             "序号": idx,
             "文件": row.get("file", ""),
             "分子": row.get("molecule", ""),
             "构象位置": row.get("position", ""),
-            "检查项总数": len(active),
-            "通过项数": len(active) - len(failed),
+            "检查项总数": len(check_cols),
+            "通过项数": passed,
             "未通过项数": len(failed),
-            "PB_valid": "是" if not failed else "否",
+            "未评估项数": len(unknown),
+            "PB_valid": status,
+            "未评估项": "；".join(CHECKS.get(c, (c,))[0] for c in unknown),
             "未通过项": "；".join(CHECKS.get(c, (c,))[0] for c in failed),
             "未通过项_原始名": ";".join(failed),
         })
@@ -252,11 +268,13 @@ def write_report(out_dir: Path, rows: list[dict], summary: list[dict],
     """写中文报告。"""
     total = len(summary)
     valid = sum(1 for s in summary if s["PB_valid"] == "是")
+    failed = sum(s["PB_valid"] == "否" for s in summary)
+    incomplete = total - valid - failed
     lines: list[str] = []
     a = lines.append
 
     a("# PoseBusters 对接姿势质量检查报告\n")
-    a(f"- 检查模式：**{MODE_DESC[mode]}**")
+    a(f"- 检查模式：**{MODE_DESC.get(mode, mode)}**")
     a(f"- 预测姿势文件：`{mol_pred.name}`")
     if mol_cond is not None:
         a(f"- 蛋白结构：`{mol_cond.name}`")
@@ -265,28 +283,14 @@ def write_report(out_dir: Path, rows: list[dict], summary: list[dict],
     if mol_true is not None:
         a(f"- 晶体参考配体：`{mol_true.name}`")
     a(f"- 本次执行检查项：**{len(active)} 项**")
-    a(f"- 姿势数：**{total}**，全部通过（PB-valid）：**{valid}**，"
-      f"存在问题：**{total - valid}**")
+    a(f"- 姿势数：**{total}**，通过：**{valid}**，未通过：**{failed}**，"
+      f"未评估完整：**{incomplete}**")
     if total:
         a(f"- PB-valid 比例：**{valid / total * 100:.1f}%**\n")
-    else:
-        a("")
 
-    # 结论先行
     a("## 结论\n")
-    if total == 0:
-        a("没有读到任何姿势。\n")
-    elif valid == total:
-        a(f"{total} 个姿势全部通过检查，化学与物理上都站得住，可以进入下一步"
-          "（如相互作用分析、打分排序、自由能计算）。\n")
-    elif valid == 0:
-        a(f"{total} 个姿势**全部存在问题**，不建议直接用于后续分析。"
-          "先看下面的「问题汇总」定位是哪一类问题——"
-          "如果集中在分子内几何，多半是生成模型的构象质量问题；"
-          "如果集中在与口袋的相容性，多半是对接位置或搜索框设置的问题。\n")
-    else:
-        a(f"{total} 个姿势中 **{valid} 个通过**、**{total - valid} 个有问题**。"
-          f"建议只取通过的 {valid} 个进入后续分析；有问题的姿势按下面的逐条说明处理。\n")
+    a("通过表示当前模式中列出的检查均已通过。未评估的检查可能缺少输入，"
+      "也可能因前置检查失败而未执行。\n")
 
     # 问题汇总：哪一项最常失败
     fail_count: dict[str, int] = {}
@@ -304,12 +308,12 @@ def write_report(out_dir: Path, rows: list[dict], summary: list[dict],
 
     # 逐个姿势
     a("## 逐个姿势\n")
-    a("| 序号 | 分子 | 构象位置 | 结果 | 通过 / 总数 | 未通过项 |")
-    a("| --- | --- | --- | --- | --- | --- |")
+    a("| 序号 | 分子 | 构象位置 | 结果 | 通过 / 总数 | 未通过项 | 未评估项 |")
+    a("| --- | --- | --- | --- | --- | --- | --- |")
     for s in summary:
-        mark = "✅ 通过" if s["PB_valid"] == "是" else "❌ 有问题"
+        mark = {"是": "通过", "否": "未通过", "未评估": "未评估完整"}[s["PB_valid"]]
         a(f"| {s['序号']} | {s['分子']} | {s['构象位置']} | {mark} | "
-          f"{s['通过项数']} / {s['检查项总数']} | {s['未通过项'] or '—'} |")
+          f"{s['通过项数']} / {s['检查项总数']} | {s['未通过项'] or '—'} | {s['未评估项'] or '—'} |")
     a("")
 
     # 本次执行了哪些检查项
@@ -342,10 +346,8 @@ def write_report(out_dir: Path, rows: list[dict], summary: list[dict],
     a("- 本 App 不调用任何第三方 API，不含密钥。\n")
 
     a("## 引用\n")
-    a("- Buttenschoen, M., Morris, G. M., Deane, C. M. PoseBusters: AI-based docking "
-      "methods fail to generate physically valid poses or generalise to novel sequences. "
-      "*Chem. Sci.* **15**, 3130-3139 (2024). doi:10.1039/D3SC04185A")
-    a("- PoseBusters 许可：BSD-3-Clause。")
+    a("- [PoseBusters 开源仓库](https://github.com/maabuu/posebusters)")
+    a("- PoseBusters 许可：MIT。")
 
     (out_dir / "report_zh.md").write_text("\n".join(lines), encoding="utf-8")
 
@@ -383,6 +385,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--mol-true", default=None,
                    help="晶体参考配体（SDF）；给了就启用 redock 模式，增加一致性与 RMSD ≤ 2 Å 检查")
     p.add_argument("--out-dir", default="./posebusters-output", help="输出目录")
+    p.add_argument("--validation-mode", default="auto", choices=sorted(PRESETS | {"auto", "custom"}))
+    p.add_argument("--config-json", type=Path, help="完整的 PoseBusters JSON 配置，仅用于 custom")
+    p.add_argument("--top-n", type=int, help="只检查每个预测文件的前 N 个姿势")
+    p.add_argument("--output-format", choices=sorted(FORMATS), default="csv")
     p.add_argument("--full-report", action="store_true",
                    help="在明细表里附上每项检查的具体数值，而不只是通过/未通过")
     return p
@@ -390,6 +396,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.top_n is not None and args.top_n < 1:
+        raise SystemExit("Top N 必须为正整数。")
+    if (args.validation_mode == "custom") != (args.config_json is not None):
+        raise SystemExit("自定义模式需要完整 JSON 配置文件，其他模式不使用该文件。")
 
     out_dir = Path(args.out_dir).expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -413,7 +423,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 剥离目标配体：蛋白文件里若还留着要对接的那个配体，它会和自己碰撞，结果全错。
     stripped_note = ""
-    if mol_cond is not None and not args.no_auto_strip:
+    if mol_cond is not None and mol_cond.suffix.lower() == ".pdb" and not args.no_auto_strip:
         het_counts = list_het_residues(mol_cond)
         if args.strip_ligand:
             targets = [x for x in args.strip_ligand.split(",") if x.strip()]
@@ -452,13 +462,52 @@ def main(argv: list[str] | None = None) -> int:
         mode = "redock" if mol_cond is not None else "reference_only"
     else:
         mode = "dock" if mol_cond is not None else "mol"
-    log(f"检查模式：{MODE_DESC[mode]}")
+    native_mode = ("regen" if mode == "reference_only" else mode) if args.validation_mode == "auto" else args.validation_mode
+    mode_label = mode if args.validation_mode == "auto" else native_mode
+    preset = native_mode.removesuffix("_fast")
+    if preset in {"dock", "redock", "gen"} and mol_cond is None:
+        raise SystemExit(f"{native_mode} 模式需要受体文件或 PDB 编号。")
+    if preset in {"regen", "redock", "gen"} and mol_true is None:
+        raise SystemExit(f"{native_mode} 模式需要参考配体。")
+    if native_mode == "custom":
+        config = json.loads(args.config_json.read_text(encoding="utf-8-sig"))
+        if not isinstance(config, dict) or not isinstance(config.get("modules"), list) or not config["modules"]:
+            raise SystemExit("JSON 配置需要一个非空的 modules 列表。")
+    else:
+        from yaml import safe_load
+
+        config = safe_load(files("posebusters").joinpath(f"config/{native_mode}.yml").read_text())
+    config_path = raw_dir / "resolved_config.json"
+    config_path.write_text(json.dumps(config, ensure_ascii=False, indent=2), encoding="utf-8")
+    # Native CLI overrides top_n only when a non-None argument is provided.
+    top_n = None if native_mode == "custom" and "top_n" in config else args.top_n
+    names = [
+        module.get("rename_outputs", {}).get(name, name + module.get("rename_suffix", ""))
+        .lower().replace(" ", "_")
+        for module in config["modules"]
+        for name in module.get("chosen_binary_test_output", [])
+    ]
+    if len(set(names)) != len(names) or set(names) & {"file", "molecule", "position"}:
+        raise SystemExit("正式检查列的名称必须唯一，且不得与姿势标识列重复。")
+    expected = set(names)
+    log(f"检查模式：{MODE_DESC.get(mode_label, mode_label)}")
 
     detail_csv = raw_dir / "posebusters_raw.csv"
-    run_bust(mol_pred, mol_true, mol_cond, detail_csv, args.full_report)
+    run_bust(mol_pred, mol_true, mol_cond, detail_csv, args.full_report, config=config_path, top_n=top_n)
+    if args.output_format != "csv":
+        run_bust(mol_pred, mol_true, mol_cond, out_dir / f"native_{args.output_format}.txt",
+                 args.full_report, config=config_path, top_n=top_n, outfmt=args.output_format)
+    from importlib.metadata import version
+
+    (out_dir / "run_metadata.json").write_text(json.dumps({
+        "posebusters": version("posebusters"), "rdkit": version("rdkit"),
+        "validation_mode": native_mode, "output_format": args.output_format,
+        "full_report": args.full_report, "top_n": config.get("top_n") if top_n is None else top_n,
+        "receptor_preprocessing": stripped_note,
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
 
     rows = list(csv.DictReader(detail_csv.open(encoding="utf-8")))
-    summary, active = summarize(rows, mode)
+    summary, active = summarize(rows, mode_label, expected)
 
     # 明细表（原样留一份在 out_dir，方便直接下载）
     shutil.copy(detail_csv, out_dir / "results.csv")
@@ -470,7 +519,7 @@ def main(argv: list[str] | None = None) -> int:
         writer.writeheader()
         writer.writerows(summary)
 
-    write_report(out_dir, rows, summary, active, mode, mol_pred, mol_true, mol_cond,
+    write_report(out_dir, rows, summary, active, mode_label, mol_pred, mol_true, mol_cond,
                  stripped_note)
 
     total = len(summary)

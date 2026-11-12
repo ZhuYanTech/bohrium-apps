@@ -1,6 +1,6 @@
 {
   "name": "posebusters-pose-validator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "developer": "ZhuYanTech",
   "display_name_zh": "PoseBusters 对接姿势质量检查",
   "display_name_en": "PoseBusters Docking Pose Validator",
@@ -22,12 +22,12 @@
       "format": "SDF / MOL / MOL2 / PDB",
       "label_zh": "待检查的配体姿势",
       "description_zh": "对接或结构预测产生的配体姿势；一个文件里可放多个分子或多个构象，会逐个检查",
-      "required": true
+      "required": false
     },
     {
       "name": "protein_file",
       "type": "file",
-      "format": "PDB",
+      "format": "PDB / SDF / MOL / MOL2",
       "label_zh": "蛋白结构（可选）",
       "description_zh": "给了就增加「与口袋的相容性」检查：原子碰撞、体积穿模、配体是否跑出口袋",
       "required": false
@@ -44,7 +44,7 @@
     {
       "name": "mol_true",
       "type": "file",
-      "format": "SDF / MOL",
+      "format": "PDB / SDF / MOL / MOL2",
       "label_zh": "晶体参考配体（可选）",
       "description_zh": "给了就增加「与参考一致」和「RMSD ≤ 2 Å」检查，用于回顾性评估对接准确度",
       "required": false
@@ -53,7 +53,7 @@
       "name": "strip_ligand",
       "type": "string",
       "label_zh": "从蛋白中删除的配体残基名（可选）",
-      "description_zh": "如 TQ3，多个用逗号分隔。蛋白里若还留着要对接的那个配体，它会和自己碰撞导致结果全错；留空时会尝试从姿势文件的分子名自动推断",
+      "description_zh": "PDB 专用。默认保留受体原样。",
       "example": "TQ3",
       "required": false
     },
@@ -63,6 +63,41 @@
       "default": false,
       "label_zh": "明细表附带具体数值",
       "description_zh": "在 results.csv 里附上每项检查的具体数值，而不只是通过/未通过",
+      "required": false
+    },
+    {
+      "name": "bundle",
+      "type": "file",
+      "required": false
+    },
+    {
+      "name": "pairing",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "validation_mode",
+      "type": "enum",
+      "required": false
+    },
+    {
+      "name": "output_format",
+      "type": "enum",
+      "required": false
+    },
+    {
+      "name": "top_n",
+      "type": "integer",
+      "required": false
+    },
+    {
+      "name": "config_json",
+      "type": "file",
+      "required": false
+    },
+    {
+      "name": "auto_strip",
+      "type": "boolean",
       "required": false
     }
   ],
@@ -90,6 +125,22 @@
       "type": "directory",
       "label_zh": "原始输出",
       "description_zh": "PoseBusters 原始 CSV，以及下载/剥离配体后的蛋白结构，供复核"
+    },
+    {
+      "name": "run_metadata.json",
+      "type": "json"
+    },
+    {
+      "name": "native_short.txt",
+      "type": "text"
+    },
+    {
+      "name": "native_long.txt",
+      "type": "text"
+    },
+    {
+      "name": "pair_NNN",
+      "type": "directory"
     }
   ],
   "notes_zh": [
@@ -99,7 +150,14 @@
     "与结晶水的碰撞/体积重叠两项：若对接时本就应置换该水分子，失败是预期之内的，可结合实际判断。",
     "本 App 不调用任何第三方 API，不含密钥。"
   ],
-  "tags": ["PoseBusters", "对接姿势验证", "分子对接", "结构预测质控", "PB-valid", "药物设计"],
+  "tags": [
+    "PoseBusters",
+    "对接姿势验证",
+    "分子对接",
+    "结构预测质控",
+    "PB-valid",
+    "药物设计"
+  ],
   "upstream": {
     "project": "PoseBusters",
     "homepage": "https://github.com/maabuu/posebusters",
@@ -109,5 +167,6 @@
   "citation": [
     "Buttenschoen, M., Morris, G. M., Deane, C. M. PoseBusters: AI-based docking methods fail to generate physically valid poses or generalise to novel sequences. Chem. Sci. 15, 3130-3139 (2024). doi:10.1039/D3SC04185A"
   ],
-  "documentation": "https://github.com/ZhuYanTech/bohrium-apps/blob/main/apps/posebusters/README.md"
+  "documentation": "https://github.com/ZhuYanTech/bohrium-apps/blob/main/apps/posebusters/README.md",
+  "input_rule": "Choose exactly one of mol_pred or bundle."
 }

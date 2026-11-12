@@ -1,5 +1,7 @@
 # 玻尔部署
 
+兼容性更新版使用独立镜像和 App 版本 `1.1.0`。下方 `1.0.0` 记录供复现旧版。
+
 部署目标为 XLab-Project 下的 Linux x86-64 容器和标准离线任务。应用标识为 `protein-aliphatic-index`，元数据见 [app.json](app.json)。
 
 ## 本地构建并推送
