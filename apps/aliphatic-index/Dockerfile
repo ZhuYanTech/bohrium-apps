@@ -4,9 +4,9 @@ LABEL org.opencontainers.image.title="Protein Aliphatic Index" \
       org.opencontainers.image.source="https://github.com/ZhuYanTech/bohrium-apps"
 
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     openssh-server supervisor net-tools ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /etc/ssh/ssh_host_*_key*
 
 WORKDIR /app
 COPY requirements-launching.txt ./
