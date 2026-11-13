@@ -6,22 +6,20 @@
 
 ## App 广场发布记录
 
-2026-11-13 提交 10 个 App 的 1.0.0 版本。开发者中心逐项回读时间为 09:13:19 至 09:13:47（UTC+08:00）。10 个版本行均显示「已发布」。当时应用级状态为 1 个「已上线」、9 个「未上线」，未观察到明确的审核状态。
+2026-11-13 09:22（UTC+08:00）复核完成。10 个 App 的 1.0.0 版本均显示「已发布」，应用均显示「已上线」。逐个打开公开详情页并按应用名称检索，10 个 App 均可访问且可在广场搜到。
 
-以下链接指向已核对的开发者版本页。公开详情链接仍待核验。文本转 FASTA 的公开详情页当时显示「App不存在」，广场名称检索也未返回该应用。
-
-| App / 开发者版本页 | 版本状态 | App 状态 |
-| --- | --- | --- |
-| [Open Babel 分子格式转换](https://www.bohrium.com/developer/detail/open-babel?tab=versions) | 已发布 | 未上线 |
-| [蛋白质拉氏图](https://www.bohrium.com/developer/detail/ramachandran-plot?tab=versions) | 已发布 | 未上线 |
-| [蛋白质亲疏水性曲线](https://www.bohrium.com/developer/detail/hydropathy-plot?tab=versions) | 已发布 | 未上线 |
-| [溶剂可及表面积计算](https://www.bohrium.com/developer/detail/sasa-calculator?tab=versions) | 已发布 | 未上线 |
-| [PDB 转 FASTA](https://www.bohrium.com/developer/detail/pdb-to-fasta?tab=versions) | 已发布 | 未上线 |
-| [文本转 FASTA](https://www.bohrium.com/developer/detail/txt-to-fasta?tab=versions) | 已发布 | 未上线 |
-| [氨基酸三字母转单字母](https://www.bohrium.com/developer/detail/three-to-one?tab=versions) | 已发布 | 未上线 |
-| [蛋白结构 RMSD 计算](https://www.bohrium.com/developer/detail/rmsd-calculator?tab=versions) | 已发布 | 已上线 |
-| [Lipinski 五规则](https://www.bohrium.com/developer/detail/lipinskis-rule-of-5?tab=versions) | 已发布 | 未上线 |
-| [酶切肽段质量计算](https://www.bohrium.com/developer/detail/peptide-mass?tab=versions) | 已发布 | 未上线 |
+| App 广场详情 | 开发者版本页 | 版本状态 | App 状态 |
+| --- | --- | --- | --- |
+| [Open Babel 分子格式转换](https://www.bohrium.com/apps/open-babel) | [1.0.0](https://www.bohrium.com/developer/detail/open-babel?tab=versions) | 已发布 | 已上线 |
+| [蛋白质拉氏图](https://www.bohrium.com/apps/ramachandran-plot) | [1.0.0](https://www.bohrium.com/developer/detail/ramachandran-plot?tab=versions) | 已发布 | 已上线 |
+| [蛋白质亲疏水性曲线](https://www.bohrium.com/apps/hydropathy-plot) | [1.0.0](https://www.bohrium.com/developer/detail/hydropathy-plot?tab=versions) | 已发布 | 已上线 |
+| [溶剂可及表面积计算](https://www.bohrium.com/apps/sasa-calculator) | [1.0.0](https://www.bohrium.com/developer/detail/sasa-calculator?tab=versions) | 已发布 | 已上线 |
+| [PDB 转 FASTA](https://www.bohrium.com/apps/pdb-to-fasta) | [1.0.0](https://www.bohrium.com/developer/detail/pdb-to-fasta?tab=versions) | 已发布 | 已上线 |
+| [文本转 FASTA](https://www.bohrium.com/apps/txt-to-fasta) | [1.0.0](https://www.bohrium.com/developer/detail/txt-to-fasta?tab=versions) | 已发布 | 已上线 |
+| [氨基酸三字母转单字母](https://www.bohrium.com/apps/three-to-one) | [1.0.0](https://www.bohrium.com/developer/detail/three-to-one?tab=versions) | 已发布 | 已上线 |
+| [蛋白结构 RMSD 计算](https://www.bohrium.com/apps/rmsd-calculator) | [1.0.0](https://www.bohrium.com/developer/detail/rmsd-calculator?tab=versions) | 已发布 | 已上线 |
+| [Lipinski 五规则](https://www.bohrium.com/apps/lipinskis-rule-of-5) | [1.0.0](https://www.bohrium.com/developer/detail/lipinskis-rule-of-5?tab=versions) | 已发布 | 已上线 |
+| [酶切肽段质量计算](https://www.bohrium.com/apps/peptide-mass) | [1.0.0](https://www.bohrium.com/developer/detail/peptide-mass?tab=versions) | 已发布 | 已上线 |
 
 ## 来源表单与结果核验
 
